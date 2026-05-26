@@ -1,45 +1,45 @@
-# ADR Format
+# ADR 格式
 
-ADRs live in `docs/adr/` and use sequential numbering: `0001-slug.md`, `0002-slug.md`, etc.
+ADR 存放在 `docs/adr/` 下，使用顺序编号：`0001-slug.md`、`0002-slug.md`，以此类推。
 
-Create the `docs/adr/` directory lazily — only when the first ADR is needed.
+`docs/adr/` 目录按需创建——只在需要第一个 ADR 时才建。
 
-## Template
+## 模板
 
 ```md
-# {Short title of the decision}
+# {简短决策标题}
 
-{1-3 sentences: what's the context, what did we decide, and why.}
+{1-3 句话：上下文是什么、我们决定了什么、为什么。}
 ```
 
-That's it. An ADR can be a single paragraph.
+就这样。一条 ADR 可以只是一个段落。
 
-## Optional sections
+## 可选章节
 
-Only include these when they add genuine value:
+只有确实有价值时才包含：
 
-- **Status** frontmatter (`proposed | accepted | deprecated | superseded by ADR-NNNN`)
-- **Considered Options** — only when the rejected alternatives are worth remembering
-- **Consequences** — only when non-obvious downstream effects need to be called out
+- **Status** 元数据（`proposed | accepted | deprecated | superseded by ADR-NNNN`）
+- **Considered Options** —— 仅当被否决的方案值得记住时
+- **Consequences** —— 仅当有非直观的下游影响需要指明时
 
-## Numbering
+## 编号
 
-Scan `docs/adr/` for the highest existing number and increment by one.
+扫描 `docs/adr/` 找到最大编号，加一即可。
 
-## When to offer an ADR
+## 何时需要 ADR
 
-All three must be true:
+以下三条必须全部满足：
 
-1. **Hard to reverse**
-2. **Surprising without context**
-3. **Result of a real trade-off**
+1. **难以撤销**
+2. **没有上下文会让人意外**
+3. **经过真实权衡的结果**
 
-### What qualifies
+### 什么算数
 
-- **Architectural shape.** "We're using a monorepo."
-- **Integration patterns between contexts.** "Ordering and Billing communicate via domain events."
-- **Technology choices that carry lock-in.** Database, message bus, auth provider.
-- **Boundary and scope decisions.** "Customer data is owned by the Customer context."
-- **Deliberate deviations from the obvious path.** "Manual SQL instead of ORM because X."
-- **Constraints not visible in the code.** "Can't use AWS due to compliance."
-- **Rejected alternatives when the rejection is non-obvious.**
+- **架构形态。** "我们采用单体仓库。"
+- **上下文之间的集成模式。** "订单和计费通过领域事件通信。"
+- **带有锁定效应的技术选型。** 数据库、消息总线、认证供应商。
+- **边界和范围决策。** "客户数据归客户上下文所有。"
+- **刻意偏离常规路径的做法。** "手动 SQL 而非 ORM，因为 X。"
+- **代码中看不到的约束。** "由于合规要求不能使用 AWS。"
+- **被否定方案的非显而易见的否定理由。**

@@ -1,47 +1,47 @@
-# CONTEXT.md Format
+# CONTEXT.md 格式
 
-## Structure
+## 结构
 
 ```md
-# {Context Name}
+# {上下文名称}
 
-{One or two sentence description of what this context is and why it exists.}
+{一两句话描述这个上下文是什么、为什么存在。}
 
-## Language
+## 语言
 
-**Order**:
-{A one or two sentence description of the term}
-_Avoid_: Purchase, transaction
+**订单**：
+{该术语的一两句话说明}
+_避免_：Purchase、transaction
 
-**Invoice**:
-A request for payment sent to a customer after delivery.
-_Avoid_: Bill, payment request
+**发票**：
+在交付后向客户发出的付款请求。
+_避免_：Bill、payment request
 
-**Customer**:
-A person or organization that places orders.
-_Avoid_: Client, buyer, account
+**客户**：
+下单的个人或组织。
+_避免_：Client、buyer、account
 ```
 
-## Rules
+## 规则
 
-- **Be opinionated.** Pick the best term, list aliases to avoid.
-- **Flag conflicts explicitly.** If a term is used ambiguously, call it out.
-- **Keep definitions tight.** One or two sentences max.
-- **Show relationships.** Use bold term names and express cardinality where obvious.
-- **Only include terms specific to this project's context.** General programming concepts don't belong.
-- **Group terms under subheadings** when natural clusters emerge.
-- **Write an example dialogue** demonstrating how the terms interact naturally.
+- **有立场。** 选择最佳术语，列出要避免的别名。
+- **显式标记冲突。** 如果一个术语有歧义，指出来。
+- **定义要精炼。** 最多一两句话。
+- **展示关系。** 使用粗体术语名，在明显的地方表达基数。
+- **只包含该项目上下文特有的术语。** 通用编程概念不属于这里。
+- **有自然聚类时**用副标题对术语分组。
+- **写一段示例对话**展示术语如何自然地协同工作。
 
-## Single vs multi-context repos
+## 单一 vs 多上下文仓库
 
-**Single context (most repos):** One `CONTEXT.md` at the repo root.
+**单一上下文（大多数仓库）：** 仓库根目录一个 `CONTEXT.md`。
 
-**Multiple contexts:** A `CONTEXT-MAP.md` at the repo root lists the contexts, where they live, and how they relate.
+**多上下文：** 仓库根目录一个 `CONTEXT-MAP.md`，列出各上下文及其存放位置和相互关系。
 
-The skill infers which structure applies:
+该 skill 会推断适用哪种结构：
 
-- If `CONTEXT-MAP.md` exists, read it to find contexts
-- If only a root `CONTEXT.md` exists, single context
-- If neither exists, create a root `CONTEXT.md` lazily when the first term is resolved
+- 如果 `CONTEXT-MAP.md` 存在，读取它以找到上下文
+- 如果只有根 `CONTEXT.md` 存在，则为单一上下文
+- 如果两者都不存在，在需要解析第一个术语时按需创建根 `CONTEXT.md`
 
-When multiple contexts exist, infer which one the current topic relates to. If unclear, ask.
+当存在多个上下文时，推断当前主题与哪个相关。如果不确定，询问。
