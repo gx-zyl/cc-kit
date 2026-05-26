@@ -1,0 +1,25 @@
+{
+  "name": "cc-kit",
+  "description": "精选 Claude Code 技能合集：诊断、TDD、架构审查、极简沟通、交接、Skill 编写、Karpathy 行为指南、黄庭协议",
+  "version": "1.0.0",
+  "author": "l",
+  "license": "MIT",
+  "keywords": [
+    "diagnose",
+    "tdd",
+    "architecture",
+    "productivity"
+  ],
+  "skills": [
+    "./skills/diagnose",
+    "./skills/grill-with-docs",
+    "./skills/tdd",
+    "./skills/caveman",
+    "./skills/handoff",
+    "./skills/grill-me",
+    "./skills/write-a-skill",
+    "./skills/karpathy-guidelines",
+    "./skills/huangting-protocol",
+    "./skills/github-repo"
+  ]
+}
