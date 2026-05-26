@@ -6,5 +6,8 @@ Thumbs.db
 *.swp
 *.swo
 *~
-.vscode/
 .idea/
+
+# VS Code: 只忽略工作流插件的 node_modules，不忽略 settings/extensions
+.vscode/extensions/claude-workflow-tools/node_modules/
+.vscode/extensions/claude-workflow-tools/.vscode/

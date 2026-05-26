@@ -1,0 +1,110 @@
+{
+  "Workflow 骨架": {
+    "prefix": "workflow",
+    "body": [
+      "# yaml-language-server: $schema=./workflow-schema.json",
+      "name: ${1:workflow-name}",
+      "description: ${2:工作流描述}",
+      "",
+      "phases:",
+      "  - title: ${3:阶段一}",
+      "  - title: ${4:阶段二}",
+      "",
+      "steps:",
+      "  - id: ${5:step-id}",
+      "    phase: ${3:阶段一}",
+      "    label: ${6:步骤标签}",
+      "    agent:",
+      "      prompt: ${7:提示词内容}",
+      "      output: ${8:result}"
+    ],
+    "description": "创建一个 YAML 工作流骨架"
+  },
+
+  "Agent 步骤": {
+    "prefix": "agent",
+    "body": [
+      "- id: ${1:step-id}",
+      "  phase: ${2:阶段}",
+      "  label: ${3:标签}",
+      "  agent:",
+      "    prompt: ${4:提示词}",
+      "    schema:",
+      "      type: object",
+      "      properties:",
+      "        ${5:field}:",
+      "          type: ${6|string,number,boolean,array,object|}",
+      "    output: ${7:outputVar}"
+    ],
+    "description": "插入一个 Agent 步骤"
+  },
+
+  "Parallel 并行": {
+    "prefix": "parallel",
+    "body": [
+      "- id: ${1:parallel-step}",
+      "  phase: ${2:阶段}",
+      "  label: ${3:标签}",
+      "  parallel:",
+      "    - id: ${4:sub-task-a}",
+      "      label: ${5:子任务 A}",
+      "      agent:",
+      "        prompt: ${6:提示词 A}",
+      "        output: resultA",
+      "    - id: ${7:sub-task-b}",
+      "      label: ${8:子任务 B}",
+      "      agent:",
+      "        prompt: ${9:提示词 B}",
+      "        output: resultB"
+    ],
+    "description": "插入一组并行执行的步骤"
+  },
+
+  "Pipeline 流水线": {
+    "prefix": "pipeline",
+    "body": [
+      "- id: ${1:pipeline-step}",
+      "  phase: ${2:阶段}",
+      "  label: ${3:标签}",
+      "  foreach:",
+      "    from: ${4:dataSource}",
+      "    as: item",
+      "  pipeline:",
+      "    - stage: ${5:第一步}",
+      "      agent:",
+      "        prompt: 处理 {{item}}：${6:提示词}",
+      "        schema:",
+      "          type: object",
+      "          properties:",
+      "            result: { type: string }",
+      "    - stage: ${7:第二步}",
+      "      label: 验证 {{item}}",
+      "      votes: 3",
+      "      passWhen: votes >= 2",
+      "      agent:",
+      "        prompt: 验证：{{item}}"
+    ],
+    "description": "插入一个流水线步骤"
+  },
+
+  "Loop 循环": {
+    "prefix": "loop",
+    "body": [
+      "- id: ${1:loop-step}",
+      "  loop:",
+      "    maxRounds: ${2:3}",
+      "    stopWhen: ${3:condition}",
+      "  steps:",
+      "    - id: check-${1:loop-step}",
+      "      phase: ${4:阶段}",
+      "      label: 第 {{loop.round}} 轮检查",
+      "      parallel:",
+      "        - id: sub-task",
+      "          label: 子任务",
+      "          agent:",
+      "            prompt: 运行检查...",
+      "            output: result"
+    ],
+    "description": "插入一个循环步骤"
+  }
+}

@@ -1,0 +1,8 @@
+{
+  "yaml.schemas": {
+    ".claude/workflows/workflow-schema.json": [
+      ".claude/workflows/*.yml",
+      ".claude/workflows/*.yaml"
+    ]
+  }
+}

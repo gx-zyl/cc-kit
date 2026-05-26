@@ -1,0 +1,78 @@
+# yaml-language-server: $schema=./workflow-schema.json
+name: code-review
+description: 审查当前分支变更，多维度并行分析并交叉验证
+phases:
+  - title: 扫描变更
+  - title: 多维度审查
+  - title: 对抗性验证
+  - title: 综合报告
+
+steps:
+
+  # ============================================================
+  # Phase 1: 扫描变更
+  # ============================================================
+  - id: git-diff
+    phase: 扫描变更
+    label: 扫描 git diff
+    agent:
+      prompt: >
+        运行 git diff main...HEAD --stat 获取变更文件列表，
+        然后对每个文件获取详细 diff。
+        输出 JSON 包含 files[] 和 totalChanges。
+      output: diffAnalysis      # ← 输出变量名，后续步骤引用
+
+  # ============================================================
+  # Phase 2: 多维度并行审查
+  # ============================================================
+  - id: code-review
+    phase: 多维度审查
+    label: 审查各维度
+    # 将上一步的输出按文件数自动分片，派多个 agent
+    foreach:
+      from: diffAnalysis.files   # 数据源
+      split: 3                   # 分 3 组
+      as: fileGroup
+      index: groupIndex
+    pipeline:
+      - stage: review
+        agent:
+          prompt: >
+            审查以下代码变更，关注逻辑正确性：
+            {{fileGroup}}
+          schema:                  # 约束输出为 JSON
+            type: object
+            properties:
+              findings:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    file: { type: string }
+                    severity: { enum: [high, medium, low] }
+                    title: { type: string }
+                    description: { type: string }
+
+      - stage: verify
+        # 对抗性验证：3 个独立 agent 尝试证伪
+        votes: 3
+        label: 验证 {{item.title}}
+        agent:
+          prompt: >
+            证伪以下发现，只有无法反驳时才判定为真实：
+            {{item.title}} - {{item.description}}
+          output: verdict         # { refuted, reason, isReal }
+        passWhen: votes >= 2      # 3 票中至少 2 票通过
+
+  # ============================================================
+  # Phase 3: 输出报告
+  # ============================================================
+  - id: report
+    phase: 综合报告
+    label: 生成报告
+    when: always                 # 即使前面有步骤失败也执行
+    merge:
+      from: code-review          # 汇总所有已验证的 findings
+      groupBy: severity
+      sortBy: severity
+      order: [high, medium, low]

@@ -1,0 +1,280 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "https://claude-code.dev/workflow-schema.json",
+  "title": "Claude Code Workflow Schema",
+  "description": "YAML schema for Claude Code workflow definitions",
+
+  "type": "object",
+  "required": ["name", "steps"],
+  "properties": {
+    "name": {
+      "type": "string",
+      "description": "工作流名称，也是 /name 命令名",
+      "pattern": "^[a-zA-Z0-9_-]+$"
+    },
+    "description": {
+      "type": "string",
+      "description": "工作流描述，显示在命令列表中"
+    },
+    "args": {
+      "type": "object",
+      "description": "声明的输入参数，调用时通过 args 传入",
+      "additionalProperties": {
+        "type": "string",
+        "description": "参数名 → 类型声明"
+      }
+    },
+    "maxRounds": {
+      "type": "integer",
+      "description": "默认的最大循环轮次（loop 步骤可覆盖）",
+      "minimum": 1,
+      "default": 3
+    },
+    "phases": {
+      "type": "array",
+      "description": "阶段定义，用于进度面板分组显示",
+      "items": {
+        "type": "object",
+        "required": ["title"],
+        "properties": {
+          "title": { "type": "string", "description": "阶段名称" },
+          "detail": { "type": "string", "description": "阶段描述" }
+        }
+      }
+    },
+    "steps": {
+      "type": "array",
+      "description": "工作流步骤列表（有序执行）",
+      "items": {
+        "$ref": "#/definitions/step"
+      }
+    }
+  },
+
+  "definitions": {
+    "step": {
+      "type": "object",
+      "description": "一个工作流步骤",
+      "required": ["id"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "步骤唯一标识，其他步骤可通过 id 引用其输出",
+          "pattern": "^[a-zA-Z0-9_-]+$"
+        },
+        "phase": {
+          "type": "string",
+          "description": "所属阶段名称（需在 phases 中定义）"
+        },
+        "label": {
+          "type": "string",
+          "description": "进度面板中显示的人类可读标签"
+        },
+        "when": {
+          "type": "string",
+          "description": "条件表达式 {{variable}}，为 true 时才执行该步骤"
+        },
+        "output": {
+          "type": "string",
+          "description": "输出变量名，后续步骤通过 {{变量名}} 引用"
+        },
+
+        "agent": {
+          "$ref": "#/definitions/agentStep"
+        },
+        "parallel": {
+          "type": "array",
+          "description": "并行执行一组子步骤，全部完成后继续",
+          "items": { "$ref": "#/definitions/step" }
+        },
+        "pipeline": {
+          "type": "array",
+          "description": "流水线阶段列表，每个阶段处理上阶段的结果",
+          "items": {
+            "type": "object",
+            "required": ["stage"],
+            "properties": {
+              "stage": { "type": "string", "description": "阶段名称" },
+              "agent": { "$ref": "#/definitions/agentStep" },
+              "votes": { "type": "integer", "description": "对抗性验证票数", "minimum": 1 },
+              "passWhen": { "type": "string", "description": "通过的票数条件" },
+              "label": { "type": "string", "description": "每项处理时的标签模板，支持 {{item}} 插值" }
+            }
+          }
+        },
+        "foreach": {
+          "type": "object",
+          "description": "遍历数据源，每项派一个子步骤处理",
+          "required": ["from"],
+          "properties": {
+            "from": { "type": "string", "description": "数据源路径，如 diffAnalysis.files" },
+            "split": { "type": "integer", "description": "分几组并行处理", "minimum": 1 },
+            "as": { "type": "string", "description": "循环变量名，默认 item" },
+            "index": { "type": "string", "description": "索引变量名，默认 index" }
+          }
+        },
+        "loop": {
+          "type": "object",
+          "description": "循环执行内部步骤",
+          "required": ["steps"],
+          "properties": {
+            "maxRounds": { "type": "integer", "description": "最大轮次", "minimum": 1, "default": 3 },
+            "stopWhen": { "type": "string", "description": "提前停止条件" },
+            "steps": {
+              "type": "array",
+              "description": "每轮执行的步骤",
+              "items": { "$ref": "#/definitions/step" }
+            }
+          }
+        },
+        "merge": {
+          "type": "object",
+          "description": "汇总上一步的输出",
+          "required": ["from"],
+          "properties": {
+            "from": { "type": "string", "description": "数据来源步骤 id" },
+            "groupBy": { "type": "string", "description": "按哪个字段分组" },
+            "sortBy": { "type": "string", "description": "排序字段" },
+            "order": {
+              "type": "array",
+              "description": "排序顺序",
+              "items": { "type": "string" }
+            }
+          }
+        },
+        "set": {
+          "type": "object",
+          "description": "设置变量值（用于聚合条件判断等）",
+          "additionalProperties": {
+            "type": "string",
+            "description": "变量名 → 表达式 {{value}}"
+          }
+        }
+      },
+      "oneOf": [
+        { "required": ["agent"] },
+        { "required": ["parallel"] },
+        { "required": ["pipeline"] },
+        { "required": ["loop"] },
+        { "required": ["merge"] },
+        { "required": ["set"] }
+      ]
+    },
+
+    "agentStep": {
+      "type": "object",
+      "description": "派一个子智能体执行任务",
+      "required": ["prompt"],
+      "properties": {
+        "prompt": {
+          "type": "string",
+          "description": "发给子智能体的提示词，支持 {{variable}} 模板插值"
+        },
+        "model": {
+          "type": "string",
+          "enum": ["sonnet", "opus", "haiku", "inherit"],
+          "description": "模型选择，默认继承父模型"
+        },
+        "maxTurns": {
+          "type": "integer",
+          "description": "最大对话轮次",
+          "minimum": 1,
+          "default": 25
+        },
+        "tools": {
+          "type": "array",
+          "description": "允许的工具白名单",
+          "items": { "type": "string" }
+        },
+        "disallowedTools": {
+          "type": "array",
+          "description": "禁止的工具黑名单",
+          "items": { "type": "string" }
+        },
+        "background": {
+          "type": "boolean",
+          "description": "是否后台运行",
+          "default": false
+        },
+        "schema": {
+          "$ref": "#/definitions/jsonSchema",
+          "description": "JSON Schema 约束输出格式。定义后子智能体返回结构化数据而非文本。支持嵌套递归。"
+        }
+      }
+    },
+
+    "jsonSchema": {
+      "type": "object",
+      "description": "JSON Schema 定义，支持递归嵌套。编辑时自动补全 type/properties/items/required/enum",
+      "properties": {
+        "type": {
+          "type": "string",
+          "enum": ["object", "array", "string", "number", "boolean", "null"],
+          "description": "数据类型"
+        },
+        "properties": {
+          "type": "object",
+          "description": "对象字段定义（当 type=object 时）",
+          "additionalProperties": {
+            "$ref": "#/definitions/jsonSchema",
+            "description": "字段名 → 子 schema（递归）"
+          }
+        },
+        "items": {
+          "$ref": "#/definitions/jsonSchema",
+          "description": "数组元素类型（当 type=array 时）"
+        },
+        "required": {
+          "type": "array",
+          "description": "必填字段列表",
+          "items": { "type": "string" }
+        },
+        "enum": {
+          "type": "array",
+          "description": "枚举允许值",
+          "items": { "type": "string" }
+        },
+        "description": {
+          "type": "string",
+          "description": "字段说明"
+        },
+        "default": {
+          "description": "默认值"
+        },
+        "minimum": { "type": "number", "description": "最小值" },
+        "maximum": { "type": "number", "description": "最大值" },
+        "minLength": { "type": "number", "description": "最小长度" },
+        "maxLength": { "type": "number", "description": "最大长度" },
+        "pattern": { "type": "string", "description": "正则表达式模式" },
+        "additionalProperties": {
+          "$ref": "#/definitions/jsonSchema",
+          "description": "额外属性 schema"
+        },
+        "oneOf": {
+          "type": "array",
+          "description": "互斥条件之一",
+          "items": { "$ref": "#/definitions/jsonSchema" }
+        },
+        "anyOf": {
+          "type": "array",
+          "description": "任意条件满足",
+          "items": { "$ref": "#/definitions/jsonSchema" }
+        },
+        "allOf": {
+          "type": "array",
+          "description": "所有条件满足",
+          "items": { "$ref": "#/definitions/jsonSchema" }
+        },
+        "nullable": {
+          "type": "boolean",
+          "description": "是否允许 null"
+        },
+        "format": {
+          "type": "string",
+          "description": "格式约束，如 date-time, email, uri",
+          "enum": ["date-time", "date", "time", "email", "hostname", "ipv4", "ipv6", "uri", "uuid"]
+        }
+      }
+    }
+  }
+}
