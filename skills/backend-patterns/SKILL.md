@@ -1,10 +1,10 @@
 ---
 name: backend-patterns
-description: Backend architecture patterns, API design, database optimization, and server-side best practices for Node.js, Express, and Next.js API routes.
+description: 后端开发模式：API 设计、数据库访问、缓存、鉴权、错误处理、日志。处理后端服务开发时触发。
 origin: ECC
 ---
 
-# Backend Development Patterns
+# 后端开发模式
 
 Backend architecture patterns and best practices for scalable server-side applications.
 

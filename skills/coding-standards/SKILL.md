@@ -1,10 +1,10 @@
 ---
 name: coding-standards
-description: Baseline cross-project coding conventions for naming, readability, immutability, and code-quality review. Use detailed frontend or backend skills for framework-specific patterns.
+description: 通用编码规范：命名、结构、文档、代码审查。用户说编码规范、代码风格时触发。
 origin: ECC
 ---
 
-# Coding Standards & Best Practices
+# 编码规范
 
 Baseline coding conventions applicable across projects.
 

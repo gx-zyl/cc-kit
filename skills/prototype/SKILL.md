@@ -1,9 +1,9 @@
 ---
 name: prototype
-description: Build a throwaway prototype to flush out a design before committing to it. Routes between two branches — a runnable terminal app for state/business-logic questions, or several radically different UI variations toggleable from one route. Use when the user wants to prototype, sanity-check a data model or state machine, mock up a UI, explore design options, or says "prototype this", "let me play with it", "try a few designs".
+description: 快速原型：搭可运行终端原型验证设计，或 UI 多方案对比。用户说搭原型、验证设计时触发。
 ---
 
-# Prototype
+# 快速原型
 
 A prototype is **throwaway code that answers a question**. The question decides the shape.
 

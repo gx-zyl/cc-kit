@@ -1,10 +1,10 @@
 ---
 name: api-design
-description: REST API design patterns including resource naming, status codes, pagination, filtering, error responses, versioning, and rate limiting for production APIs.
+description: REST API 设计模式：资源命名、状态码、分页、过滤、错误响应、版本控制、限流。用户说设计 API、REST 接口规范时触发。
 origin: ECC
 ---
 
-# API Design Patterns
+# API 设计模式
 
 Conventions and best practices for designing consistent, developer-friendly REST APIs.
 

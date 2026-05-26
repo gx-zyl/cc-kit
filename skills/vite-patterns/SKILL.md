@@ -1,10 +1,10 @@
 ---
 name: vite-patterns
-description: Vite build tool patterns including config, plugins, HMR, env variables, proxy setup, SSR, library mode, dependency pre-bundling, and build optimization. Activate when working with vite.config.ts, Vite plugins, or Vite-based projects.
+description: Vite 模式：配置、插件、环境变量、构建优化、SSR。用户说 Vite、前端构建时触发。
 origin: ECC
 ---
 
-# Vite Patterns
+# Vite 模式
 
 Build tool and dev server patterns for Vite 8+ projects. Covers configuration, environment variables, proxy setup, library mode, dependency pre-bundling, and common production pitfalls.
 

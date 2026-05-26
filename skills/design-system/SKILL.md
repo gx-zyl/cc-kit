@@ -1,10 +1,10 @@
 ---
 name: design-system
-description: Use this skill to generate or audit design systems, check visual consistency, and review PRs that touch styling.
+description: 视觉设计系统：色彩、排版、间距、组件、无障碍。用户说设计系统、风格指南、UI 规范时触发。
 origin: ECC
 ---
 
-# Design System — Generate & Audit Visual Systems
+# 设计系统
 
 ## When to Use
 

@@ -1,10 +1,10 @@
 ---
 name: deployment-patterns
-description: Deployment workflows, CI/CD pipeline patterns, Docker containerization, health checks, rollback strategies, and production readiness checklists for web applications.
+description: 部署策略：CI/CD、灰度发布、回滚、环境管理。用户说部署、CI/CD、发布策略时触发。
 origin: ECC
 ---
 
-# Deployment Patterns
+# 部署模式
 
 Production deployment workflows and CI/CD best practices.
 

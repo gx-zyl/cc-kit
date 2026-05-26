@@ -1,10 +1,10 @@
 ---
 name: java-coding-standards
-description: "Java coding standards for Spring Boot and Quarkus services: naming, immutability, Optional usage, streams, exceptions, generics, CDI, reactive patterns, and project layout. Automatically applies framework-specific conventions."
+description: Java 编码规范：命名、结构、异常、集合、并发、Optional。用户说 Java 规范、代码风格时触发。
 origin: ECC
 ---
 
-# Java Coding Standards
+# Java 编码规范
 
 Standards for readable, maintainable Java (17+) code in Spring Boot and Quarkus services.
 

@@ -1,10 +1,10 @@
 ---
 name: verification-loop
-description: "A comprehensive verification system for Claude Code sessions."
+description: 验证循环：构建→测试→lint→安全→部署检查。用户说验证循环、提交前检查时触发。
 origin: ECC
 ---
 
-# Verification Loop Skill
+# 验证循环
 
 A comprehensive verification system for Claude Code sessions.
 

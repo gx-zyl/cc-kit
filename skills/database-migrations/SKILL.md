@@ -1,10 +1,10 @@
 ---
 name: database-migrations
-description: Database migration best practices for schema changes, data migrations, rollbacks, and zero-downtime deployments across PostgreSQL, MySQL, and common ORMs (Prisma, Drizzle, Kysely, Django, TypeORM, golang-migrate).
+description: 数据库迁移模式：安全 schema 变更、回滚策略、零停机迁移。用户说数据库迁移、改表结构时触发。
 origin: ECC
 ---
 
-# Database Migration Patterns
+# 数据库迁移模式
 
 Safe, reversible database schema changes for production systems.
 
