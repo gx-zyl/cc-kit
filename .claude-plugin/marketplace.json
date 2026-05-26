@@ -41,6 +41,10 @@
     "./skills/architecture-decision-records",
     "./skills/verification-loop",
     "./skills/error-handling",
-    "./skills/deployment-patterns"
+    "./skills/deployment-patterns",
+    "./skills/improve-codebase-architecture",
+    "./skills/prototype",
+    "./skills/triage",
+    "./skills/zoom-out"
   ]
 }
