@@ -6,7 +6,7 @@
   "plugins": [
     {
       "name": "cc-kit",
-      "source": ".",
+      "source": "./plugin",
       "version": "1.0.0"
     }
   ]
