@@ -4,3 +4,4 @@
 - 修复 plugin.json skill 路径错位（./ → ../）
 - 统一 make-dream skill.md 大小写（SKILL.md → skill.md）
 - 代码审查代理脚本、skill、插件结构（3 commits）
+- 修复插件加载：marketplace 源从 directory 改为 git，skills 移入 plugin/skills/
