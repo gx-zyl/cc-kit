@@ -1,3 +1,4 @@
+- 更新 Claude Code v2.1.152（native 安装）
 - 注册 cc-kit 插件：创建 marketplace.json，更新 settings.json（extraKnownMarketplaces + enabledPlugins）
 - 移除失效的 mattpocock-skills 引用
 - 清理嵌套的 `.claude-plugin/.claude-plugin/` 副本目录
