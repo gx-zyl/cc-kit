@@ -1,3 +1,6 @@
 - 注册 cc-kit 插件：创建 marketplace.json，更新 settings.json（extraKnownMarketplaces + enabledPlugins）
 - 移除失效的 mattpocock-skills 引用
 - 清理嵌套的 `.claude-plugin/.claude-plugin/` 副本目录
+- 修复 plugin.json skill 路径错位（./ → ../）
+- 统一 make-dream skill.md 大小写（SKILL.md → skill.md）
+- 代码审查代理脚本、skill、插件结构（3 commits）

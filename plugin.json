@@ -1,0 +1,53 @@
+{
+  "name": "cc-kit",
+  "description": "技能合集：SpringBoot/Java/Vue/TS 开发模式 + 调试/TDD/审方案/极简沟通等通用 skill",
+  "version": "1.0.0",
+  "author": {
+    "name": "l"
+  },
+  "license": "MIT",
+  "keywords": [
+    "diagnose",
+    "tdd",
+    "architecture",
+    "productivity"
+  ],
+  "skills": [
+    "./skills/diagnose",
+    "./skills/grill-with-docs",
+    "./skills/tdd",
+    "./skills/caveman",
+    "./skills/handoff",
+    "./skills/grill-me",
+    "./skills/write-a-skill",
+    "./skills/make-dream",
+    "./skills/karpathy-guidelines",
+    "./skills/huangting-protocol",
+    "./skills/github-repo",
+    "./skills/springboot-patterns",
+    "./skills/springboot-security",
+    "./skills/springboot-tdd",
+    "./skills/springboot-verification",
+    "./skills/java-coding-standards",
+    "./skills/jpa-patterns",
+    "./skills/frontend-patterns",
+    "./skills/vite-patterns",
+    "./skills/design-system",
+    "./skills/api-design",
+    "./skills/ui-to-vue",
+    "./skills/coding-standards",
+    "./skills/backend-patterns",
+    "./skills/database-migrations",
+    "./skills/docker-patterns",
+    "./skills/postgres-patterns",
+    "./skills/git-workflow",
+    "./skills/architecture-decision-records",
+    "./skills/verification-loop",
+    "./skills/error-handling",
+    "./skills/deployment-patterns",
+    "./skills/improve-codebase-architecture",
+    "./skills/prototype",
+    "./skills/triage",
+    "./skills/zoom-out"
+  ]
+}
