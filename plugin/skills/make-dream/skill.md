@@ -26,10 +26,10 @@ description: 总结对话经验，提取可复用模式，产出 command / skill
 
 ## 产出格式
 
-### command → `skills/<name>/SKILL.md`
+### command → `plugin/skills/<name>/SKILL.md`
 确定性操作，可直接写成 claude command。条件：步骤固定、无需 AI 判断。
 
-### skill → `skills/<name>/SKILL.md`
+### skill → `plugin/skills/<name>/SKILL.md`
 场景化能力封装，含 description、触发条件、流程步骤。条件：有判断分支、需要上下文理解。
 
 ### workflow → `.claude/workflows/<name>.yml`

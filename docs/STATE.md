@@ -3,7 +3,7 @@
 ## 现状
 
 - `cc-kit` 插件已通过 GitHub marketplace + `claude plugin install` 安装并启用
-- 36 个 skill 全部加载成功（`claude plugin details` 可验证）
+- 38 个 skill 全部加载成功（`claude plugin details` 可验证）
 - 技能路径：`plugin/plugin.json` → `./skills/{name}` → `plugin/skills/{name}/skill.md`
 
 ## 链路
