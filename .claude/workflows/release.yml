@@ -1,0 +1,92 @@
+# yaml-language-server: $schema=./workflow-schema.json
+name: release
+description: 插件版本发布——改版本号、提交、打 tag、推送、更新 marketplace、重装
+args:
+  version: string   # 目标版本号，如 "1.2.0"
+
+phases:
+  - title: Bump version
+  - title: Tag & push
+  - title: Install
+
+steps:
+
+  # ============================================================
+  # Phase 1 — 更新 plugin.json 和 marketplace.json 的版本号
+  # ============================================================
+  - id: bump-plugin
+    phase: Bump version
+    label: 更新 plugin.json
+    agent:
+      prompt: |
+        将 plugin/plugin.json 中的 "version" 字段改为 "{{args.version}}"，保留其他所有内容不变。
+        确认修改前后版本号：旧 → {{args.version}}。
+      tools: [Read, Edit]
+
+  - id: bump-marketplace
+    phase: Bump version
+    label: 更新 marketplace.json
+    agent:
+      prompt: |
+        将 .claude-plugin/marketplace.json 中 plugins[0].version 字段改为 "{{args.version}}"，保留其他所有内容不变。
+        确认修改前后版本号：旧 → {{args.version}}。
+      tools: [Read, Edit]
+
+  # ============================================================
+  # Phase 2 — 提交、打 tag、推送
+  # ============================================================
+  - id: commit-and-tag
+    phase: Tag & push
+    label: 提交 + 打 tag + 推送
+    agent:
+      prompt: |
+        执行以下步骤：
+
+        1. git add plugin/plugin.json .claude-plugin/marketplace.json
+        2. git commit -m "chore: bump version {{args.version}}"
+        3. 运行 claude plugin tag --push -m "cc-kit v%s" ./plugin
+        4. git push
+
+        确认每一步成功后才进行下一步。
+      tools: [Bash]
+
+  # ============================================================
+  # Phase 3 — marketplace 刷新 + 插件重装
+  # ============================================================
+  - id: marketplace-sync
+    phase: Install
+    label: 刷新 marketplace 缓存
+    agent:
+      prompt: |
+        设置代理后执行 claude plugin marketplace update cc-kit，确认输出包含 "Successfully updated"。
+        如果超时或失败，重试一次。
+      tools: [Bash]
+
+  - id: checkout-latest-tag
+    phase: Install
+    label: checkout 最新 tag
+    agent:
+      prompt: |
+        marketplace update 只 fetch 不 checkout tag，需手动切到最新 tag：
+
+        cd "$HOME/.claude/plugins/marketplaces/cc-kit"
+        git fetch --tags origin
+        LATEST_TAG=$(git tag -l 'cc-kit*' | sort -V | tail -1)
+        git checkout "$LATEST_TAG"
+
+        确认 HEAD 已指向最新 tag。
+      tools: [Bash]
+
+  - id: plugin-reinstall
+    phase: Install
+    label: 重装插件
+    agent:
+      prompt: |
+        先设置代理，然后依次执行：
+
+        1. claude plugin uninstall cc-kit
+        2. claude plugin install cc-kit@cc-kit
+        3. claude plugin details cc-kit — 确认版本号显示为 {{args.version}} 且 skill 数量正确
+
+        每一步成功后进行下一步。
+      tools: [Bash]
