@@ -72,3 +72,15 @@ git clone https://github.com/gx-zyl/cc-kit.git ~/.claude/plugins/cc-kit
 cd ~/.claude/plugins/cc-kit && git fetch --tags origin && git checkout cc-kit--v{version}
 ```
 或通过 `claude plugin marketplace update` 自动更新。
+
+## 推荐终端配置
+
+| 工具 | 用途 | 安装 |
+|------|------|------|
+| **Oh My Posh** | 自定义 PowerShell 提示符 | `winget install JanDeDobbeleer.OhMyPosh` |
+| **Meslo Nerd Font** | 提示符图标字体 | `oh-my-posh font install Meslo`（装后终端切换为该字体） |
+
+配置追加到 PowerShell `$PROFILE`：
+```pwsh
+oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\jandedobbeleer.omp.json" | Invoke-Expression
+```
