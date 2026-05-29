@@ -1,6 +1,6 @@
 # cc-kit
 
-Claude Code 精选技能合集。
+Claude Code 精选技能合集。**v1.4.0**
 
 ## 技能清单
 
@@ -15,6 +15,7 @@ Claude Code 精选技能合集。
 | handoff | 交接文档 |
 | grill-me | AI 拷打设计 |
 | write-a-skill | 创建自定义 Skill |
+| grow-dream | 对话回顾与模式沉淀 |
 | improve-codebase-architecture | 代码架构改进与重构 |
 | prototype | 原型设计与探索 |
 | triage | 问题分类与状态管理 |
@@ -63,4 +64,11 @@ Claude Code 精选技能合集。
 
 ## 安装
 
-放在 `~/.claude/plugins/cc-kit/` 即可被 Claude Code 自动发现。
+```bash
+# 首次安装
+git clone https://github.com/gx-zyl/cc-kit.git ~/.claude/plugins/cc-kit
+
+# 更新到最新版
+cd ~/.claude/plugins/cc-kit && git fetch --tags origin && git checkout cc-kit--v{version}
+```
+或通过 `claude plugin marketplace update` 自动更新。
