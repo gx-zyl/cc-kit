@@ -21,7 +21,7 @@
 - marketplace 操作（`claude plugin marketplace update`、`claude plugin install`、`claude plugin tag --push` 等）涉及 GitHub 访问，需临时启用代理
 - `claude plugin marketplace update` 会 `git fetch` 但**不会**自动 checkout 最新 tag，导致插件版本号解析停滞。发版后手动补一步：
   ```pwsh
-  cd "$env:USERPROFILE\.claude\plugins\marketplaces\cc-kit"
+  cd "$env:USERPROFILE\.claude\plugins\cc-kit"
   git fetch --tags origin
   git checkout cc-kit--v{version}
   ```
