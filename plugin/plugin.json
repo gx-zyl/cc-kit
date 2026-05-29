@@ -20,7 +20,6 @@
     "./skills/handoff",
     "./skills/grill-me",
     "./skills/write-a-skill",
-    "./skills/make-dream",
     "./skills/karpathy-guidelines",
     "./skills/huangting-protocol",
     "./skills/github-repo",
@@ -49,7 +48,6 @@
     "./skills/prototype",
     "./skills/triage",
     "./skills/zoom-out",
-    "./skills/grow-dream",
-    "./skills/workflow-dream"
+    "./skills/grow-dream"
   ]
 }

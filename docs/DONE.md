@@ -4,5 +4,7 @@
 - 清理嵌套的 `.claude-plugin/.claude-plugin/` 副本目录
 - 修复 plugin.json skill 路径错位（./ → ../）
 - 统一 make-dream skill.md 大小写（SKILL.md → skill.md）
+- 删除 workflow-dream（职责被 grow-dream + make-dream 覆盖）；grow-dream 增加 CLAUDE.md/AGENTS.md/项目文档/交叉检查维度
+- 合并 make-dream 进 grow-dream（分析 → 产出 一体化），删除 make-dream 目录
 - 代码审查代理脚本、skill、插件结构（3 commits）
 - 修复插件加载：marketplace 源从 directory 改为 git，skills 移入 plugin/skills/
