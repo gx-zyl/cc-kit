@@ -6,9 +6,16 @@
   $env:HTTP_PROXY = 'http://127.0.0.1:9910'
   $env:HTTPS_PROXY = 'http://127.0.0.1:9910'
   ```
+  ```bash
+  export HTTP_PROXY='http://127.0.0.1:9910'
+  export HTTPS_PROXY='http://127.0.0.1:9910'
+  ```
 - 用完即时取消：
   ```pwsh
   Remove-Item Env:HTTP_PROXY, Env:HTTPS_PROXY
+  ```
+  ```bash
+  unset HTTP_PROXY HTTPS_PROXY
   ```
 - 浏览器走 PAC 自动分流（`proxy.pac`），不依赖环境变量
 - marketplace 操作（`claude plugin marketplace update`、`claude plugin install`、`claude plugin tag --push` 等）涉及 GitHub 访问，需临时启用代理
