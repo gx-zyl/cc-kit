@@ -1,6 +1,6 @@
 # cc-kit
 
-Claude Code 精选技能合集。**v1.4.0**
+Claude Code 精选技能合集。**v1.5.0**
 
 ## 技能清单
 
@@ -61,6 +61,16 @@ Claude Code 精选技能合集。**v1.4.0**
 | vite-patterns | Vite 构建工具模式 |
 | design-system | 设计系统生成与审计 |
 | ui-to-vue | UI 截图转 Vue 3 组件 |
+
+### WSL 环境工具
+
+| Skill | 用途 |
+|-------|------|
+| chrome-devtools-wsl | Chrome CDP 桥接（WSL→Windows） |
+| wsl-chatgpt | WSL 终端操控 ChatGPT / `/wsl-chatgpt` 命令 |
+| wsl-network | WSL 网络代理 + 防火墙配置 |
+
+> 首次使用 `chrome-devtools-wsl`：复制 `.env.example` 为 `.env` 并确认路径。
 
 ## 安装
 
