@@ -1,6 +1,6 @@
 # cc-kit
 
-Claude Code 精选技能合集。**v1.5.0**
+Claude Code 精选技能合集。**v1.5.1**
 
 ## 技能清单
 
@@ -14,6 +14,7 @@ Claude Code 精选技能合集。**v1.5.0**
 | caveman | 极简输出省 Token |
 | handoff | 交接文档 |
 | grill-me | AI 拷打设计 |
+| grill-dream | grill-me 增强版 — grow-dream 验收 |
 | write-a-skill | 创建自定义 Skill |
 | grow-dream | 对话回顾与模式沉淀 |
 | improve-codebase-architecture | 代码架构改进与重构 |

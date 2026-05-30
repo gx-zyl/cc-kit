@@ -3,8 +3,8 @@
 ## 现状
 
 - `cc-kit` 插件已通过 GitHub marketplace + `claude plugin install` 安装并启用
-- **39 个 skill** + 1 个 command（v1.5.0）
-- 新增 3 个 WSL 工具 skill：`wsl-chatgpt`、`wsl-network`、`chrome-devtools-wsl`
+- **40 个 skill** + 1 个 command（v1.5.1）
+- 新增 3 个 WSL 工具 skill + `grill-dream`（grow-dream 第⑧步验收）
 - 新增 3 个 WSL 规则：`wsl-env-audit`、`wsl-cli-tools`、`mise-omz-loading-order`
 - 技能路径：`plugin/plugin.json` → `./skills/{name}` → `plugin/skills/{name}/SKILL.md`
 - 参数配置：`chrome-devtools-wsl/.env.example` → 复制为 `.env` 后修改
