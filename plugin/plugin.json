@@ -27,6 +27,7 @@
     "./skills/caveman",
     "./skills/handoff",
     "./skills/grill-me",
+    "./skills/grill-me-2",
     "./skills/write-a-skill",
     "./skills/karpathy-guidelines",
     "./skills/huangting-protocol",
