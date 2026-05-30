@@ -1,6 +1,6 @@
 ---
 name: grill-dream
-description: 继承 grill-me 哲学（逐一追问→先给答案→先查代码），在此基础上增加分层递进策略、场景化追问模板、及 grow-dream 验收模式。grow-dream 第⑧步专用，也支持独立触发。用户说"拷打 v2"、"深度追问"、"验收方案"、"grill me harder"、"grill dream"时触发。
+description: 继承 grill-me 哲学（逐一追问→先给答案→先查代码），在此基础上增加分层递进策略、场景化追问模板、及 grow-dream 验收模式。grow-dream 第⑧步默认调用，也支持独立触发。用户说"拷打 v2"、"深度追问"、"验收方案"、"grill me harder"、"grill dream"时触发。
 ---
 
 # grill-dream — 深度追问验收
