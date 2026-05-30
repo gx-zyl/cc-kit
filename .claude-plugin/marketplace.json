@@ -1,13 +1,13 @@
 {
   "name": "cc-kit",
   "owner": {
-    "name": "l"
+    "name": "gx-zyl"
   },
   "plugins": [
     {
       "name": "cc-kit",
       "source": "./plugin",
-      "version": "1.1.0"
+      "version": "1.5.0"
     }
   ]
 }

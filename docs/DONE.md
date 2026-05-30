@@ -1,9 +1,11 @@
+- 2026-05-30: 迁移 zyl 插件 (wsl-chatgpt/wsl-network/chrome-devtools-wsl) + 3 WSL 规则 + 命令入口
+- 2026-05-30: 重构 chrome-devtools-wsl: cdp_ws 进程内 asyncio, firewall 单端口规则, 路径参数化 (.env)
+- 2026-05-30: 修正 marketplace.json owner→gx-zyl, 版本→1.5.0; 统一 SKILL.md 大小写
 - 更新 Claude Code v2.1.152（native 安装）
 - 注册 cc-kit 插件：创建 marketplace.json，更新 settings.json（extraKnownMarketplaces + enabledPlugins）
 - 移除失效的 mattpocock-skills 引用
 - 清理嵌套的 `.claude-plugin/.claude-plugin/` 副本目录
 - 修复 plugin.json skill 路径错位（./ → ../）
-- 统一 make-dream skill.md 大小写（SKILL.md → skill.md）
 - 删除 workflow-dream（职责被 grow-dream + make-dream 覆盖）；grow-dream 增加 CLAUDE.md/AGENTS.md/项目文档/交叉检查维度
 - 合并 make-dream 进 grow-dream（分析 → 产出 一体化），删除 make-dream 目录
 - 代码审查代理脚本、skill、插件结构（3 commits）

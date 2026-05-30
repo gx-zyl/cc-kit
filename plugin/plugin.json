@@ -1,7 +1,8 @@
 {
+  "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "cc-kit",
-  "description": "技能合集：SpringBoot/Java/Vue/TS 开发模式 + 调试/TDD/审方案/极简沟通等通用 skill",
-  "version": "1.4.0",
+  "description": "技能合集：SpringBoot/Java/Vue/TS 开发模式 + WSL 环境工具 + 调试/TDD/审方案/极简沟通等通用 skill",
+  "version": "1.5.0",
   "author": {
     "name": "l"
   },
@@ -10,7 +11,14 @@
     "diagnose",
     "tdd",
     "architecture",
-    "productivity"
+    "productivity",
+    "wsl",
+    "network",
+    "chrome",
+    "devtools"
+  ],
+  "commands": [
+    "./commands"
   ],
   "skills": [
     "./skills/diagnose",
@@ -48,6 +56,9 @@
     "./skills/prototype",
     "./skills/triage",
     "./skills/zoom-out",
-    "./skills/grow-dream"
+    "./skills/grow-dream",
+    "./skills/chrome-devtools-wsl",
+    "./skills/wsl-chatgpt",
+    "./skills/wsl-network"
   ]
 }

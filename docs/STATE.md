@@ -3,8 +3,11 @@
 ## 现状
 
 - `cc-kit` 插件已通过 GitHub marketplace + `claude plugin install` 安装并启用
-- 38 个 skill 全部加载成功（`claude plugin details` 可验证）
-- 技能路径：`plugin/plugin.json` → `./skills/{name}` → `plugin/skills/{name}/skill.md`
+- **39 个 skill** + 1 个 command（v1.5.0）
+- 新增 3 个 WSL 工具 skill：`wsl-chatgpt`、`wsl-network`、`chrome-devtools-wsl`
+- 新增 3 个 WSL 规则：`wsl-env-audit`、`wsl-cli-tools`、`mise-omz-loading-order`
+- 技能路径：`plugin/plugin.json` → `./skills/{name}` → `plugin/skills/{name}/SKILL.md`
+- 参数配置：`chrome-devtools-wsl/.env.example` → 复制为 `.env` 后修改
 
 ## 链路
 
@@ -25,3 +28,4 @@ settings.json → extraKnownMarketplaces.cc-kit → GitHub (gx-zyl/cc-kit)
 ## 待办
 
 - 后续新增 skill 在 `plugin/skills/` 下创建，并注册到 `plugin/plugin.json`
+- 发版时同步更新 `marketplace.json` 和 `plugin.json` 的 version 字段
