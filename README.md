@@ -1,6 +1,6 @@
 # cc-kit
 
-Claude Code 精选技能合集。**v1.5.2**
+Claude Code 精选技能合集。**v1.5.3**
 
 ## 技能清单
 
@@ -95,3 +95,35 @@ cd ~/.claude/plugins/cc-kit && git fetch --tags origin && git checkout cc-kit--v
 ```pwsh
 oh-my-posh init pwsh --config "$env:POSH_THEMES_PATH\jandedobbeleer.omp.json" | Invoke-Expression
 ```
+
+## 增强工具：zoxide + fzf
+
+zoxide 是智能 `cd`（模糊匹配 + 频率排序），fzf 是通用模糊搜索器。两者结合：`z` 直接跳，`zi` 弹出 fzf 面板交互选目录。
+
+| 工具 | 安装 | 用途 |
+|------|------|------|
+| **zoxide** | `winget install ajeetdsouza.zoxide` | `z cc-kit` — 跳转到最匹配目录 |
+| **fzf** | `scoop install fzf` | `zi` — 交互式选目录（zoxide 原生集成） |
+
+**常用命令**：
+
+| 命令 | 行为 |
+|------|------|
+| `z cc-kit` | 直接跳到最匹配 "cc-kit" 的目录 |
+| `zi` | 弹出 fzf 面板，↑↓ 选目录，Enter 跳转 |
+| `zi cc-kit` | 预过滤后再交互选择 |
+| `zoxide query -l` | 列出数据库所有目录 |
+| `z -` | 回退到上一个目录 |
+
+**PowerShell profile 配置**（追加到 `$PROFILE`）：
+
+```pwsh
+if (Get-Command zoxide -ErrorAction SilentlyContinue) {
+    $env:_ZO_FZF_OPTS = "--height 60% --layout reverse --border --preview 'cmd /c dir /b {} 2>nul || echo (empty)'"
+    zoxide init powershell | Out-String | Invoke-Expression
+}
+```
+
+首次使用：`cd` 到几个目录转转，zoxide 自动记录，之后就能 `z <关键词>` 或 `zi` 跳转了。
+
+> 详细配置（WSL 环境、别名、更多工具链）见 `.claude/rules/wsl-cli-tools.md`。
