@@ -27,7 +27,6 @@
     "./skills/caveman",
     "./skills/handoff",
     "./skills/grill-me",
-    "./skills/grill-dream",
     "./skills/write-a-skill",
     "./skills/karpathy-guidelines",
     "./skills/huangting-protocol",
@@ -60,6 +59,7 @@
     "./skills/grow-dream",
     "./skills/chrome-devtools-wsl",
     "./skills/wsl-chatgpt",
-    "./skills/wsl-network"
+    "./skills/wsl-network",
+    "./skills/w-ocean-agent"
   ]
 }

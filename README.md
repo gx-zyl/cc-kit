@@ -14,13 +14,13 @@ Claude Code 精选技能合集。**v1.5.3**
 | caveman | 极简输出省 Token |
 | handoff | 交接文档 |
 | grill-me | AI 拷打设计 |
-| grill-dream | grill-me 增强版 — 主动识别+提问式链路矩阵+grow-dream 验收 |
 | write-a-skill | 创建自定义 Skill |
 | grow-dream | 对话回顾与模式沉淀 |
 | improve-codebase-architecture | 代码架构改进与重构 |
 | prototype | 原型设计与探索 |
 | triage | 问题分类与状态管理 |
 | zoom-out | 宏观视角与全局上下文 |
+| w-ocean-agent | w-ocean 知识图谱维护：去重/合并/关联建议/健康检查 |
 
 
 
@@ -72,6 +72,25 @@ Claude Code 精选技能合集。**v1.5.3**
 | wsl-network | WSL 网络代理 + 防火墙配置 |
 
 > 首次使用 `chrome-devtools-wsl`：复制 `.env.example` 为 `.env` 并确认路径。
+
+### 命令
+
+| 命令 | 用途 |
+|------|------|
+| `/w-ocean` | 浏览/查询/遍历当前项目的 w-ocean 知识图谱 |
+| `/publish` | 一键发布新版本 |
+| `/wsl-chatgpt` | WSL 终端操控 ChatGPT |
+
+### 工作流
+
+| Workflow | 用途 |
+|----------|------|
+| w-ocean | grow-dream 总结沉淀的知识图谱 — 浏览/查询/遍历有向图 |
+| code-review | 多维度并行审查代码变更 |
+| triage | Issue 分类管理 |
+| verify-all | 全量验证循环 |
+
+> `/w-ocean` 由 grow-dream 自动调用（第⑨步），每次总结后追加节点。
 
 ## 安装
 
