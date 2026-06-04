@@ -51,4 +51,4 @@ description: 浏览/查询/遍历项目知识图谱（w-ocean/）
 | 资源 | 用途 |
 |------|------|
 | `w-ocean/graph.json` | 图谱数据 |
-| `.claude/workflows/w-ocean.md` | 底层 Workflow 引擎 |
+| cc-kit 插件 `.claude/workflows/w-ocean.md` | 底层 Workflow 引擎（定位：`claude plugin list | grep cc-kit`） |

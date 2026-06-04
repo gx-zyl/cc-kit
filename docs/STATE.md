@@ -3,12 +3,12 @@
 ## 现状
 
 - `cc-kit` 插件已通过 GitHub marketplace + `claude plugin install` 安装并启用
-- **40 个 skill**（grill-dream 已内化为 grow-dream 的子流程）+ 2 个 command（v1.5.3-dev）
+- **39 个 skill**（grill-dream 内化为子流程，w-ocean-agent 移入模板不注册）+ 1 个 command（v1.5.3-dev）
 - `grill-dream` 不再独立注册，追问验收逻辑整合进 grow-dream 步骤⑧
 - 新增 `/w-ocean` 知识图谱体系（grow-dream 第⑨步产出）
 - 新增 1 个 template：`plugin/templates/w-ocean/`（graph.json + config.yaml + README.md）
-- 新增 1 个 command：`/w-ocean`（浏览/查询/遍历图谱）
-- 新增 1 个 skill：`w-ocean-agent`（图谱维护：去重/合并/关联建议/健康检查）
+- `/w-ocean` 移入模板（`plugin/templates/w-ocean/commands/`），grow-dream 部署时带入用户项目，不全局注册
+- `w-ocean-agent` 移入模板（`plugin/templates/w-ocean/skills/`），grow-dream 部署时带入用户项目，不全局注册
 - 新增 1 个 workflow：`w-ocean`（.yml + .md 双格式，底层引擎）
 - 新增 1 个 reference：`.claude/references/skill-structure.md`（skill 文件组织规范）
 - 技能路径：`plugin/plugin.json` → `./skills/{name}` → `plugin/skills/{name}/SKILL.md`

@@ -163,19 +163,16 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
 
 3. **交叉检查**：逐对比对各文件对同一概念的描述是否一致；检查用户曾纠正过的行为是否已在对应文件中更新；确认 AI 的反馈与项目文件无矛盾
 
-4. **提炼分类** — 按频次和性质归类。对每类先查 w-ocean 图谱有无相似节点：
+4. **提炼分类** — 按频次和性质归类。类型定义见 `.claude/references/grow-dream-types.md`。
    - 重复 ≥2 次的确定性操作 → command
-   - 特定场景的解题套路（需判断分支）→ skill。产出前查阅 `.claude/references/skill-structure.md` 确认结构合规（SKILL.md + references/ + scripts/ 职责分离）
+   - 特定场景的解题套路（需判断分支）→ skill（产出前查阅 `.claude/references/skill-structure.md` 确认结构合规）
    - 跨项目的通用行为约束 → rule
-   - 需独立判断、持续运行的有限角色 → agent（格式：`agents/<name>.md`，YAML frontmatter + Markdown 体）。产出后需定义调用方式（skill 引用 / workflow 编排 / 手动触发）
-   - 特定 git/claude 事件触发的自动化 → hook。需定义判定条件、触发时机、执行效率
+   - 需独立判断、持续运行的有限角色 → agent（格式：`agents/<name>.md`，YAML frontmatter + Markdown 体）
+   - 特定 git/claude 事件触发的自动化 → hook
    - 项目根文档缺失或不一致 → CLAUDE.md / AGENTS.md
    - **频次 ≥2 的规律提醒、反复纠正、跨会话偏好的持续化** → **memory**
 
-   **图谱感知判定**：对每个归类候选，检查 w-ocean 是否已有相似节点：
-   - **已有同名节点** → 更新（tags/summary/refs），不产生新条目
-   - **已有扩展/被扩展关系** → 通过 refs 继承边关系
-   - **图谱空白** → 正常新建节点，无历史负担
+   图谱感知：按步骤①的 w-ocean 对照结果执行——已有变体则扩展，全新模式则新建。
 5. 对每个维度逐一判断：是否有改进空间？
 6. 输出结构化建议：改进什么文件、怎么改、为什么
 7. 对于需要用户决策的改进，提供选项
@@ -198,6 +195,8 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
 
    验收维度：
 
+   类型定义见 `.claude/references/grow-dream-types.md`。验收维度如下：
+
    | 候选类型 | 验收维度 | 判定标准 |
    |---------|---------|---------|
    | **skill** | 触发条件明确？已有 skill 覆盖？维护成本？ | 触发关键词明确、不与现有 skill 重叠、场景化有分支 |
@@ -214,18 +213,14 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
 
 10. **⑨ /w-ocean 沉淀入库** — 将本次总结的结构化输出沉淀到当前项目的 `w-ocean/` 知识图谱：
 
-    a. **检测与初始化** — 检查当前项目根目录是否存在 `w-ocean/graph.json`：
-       - **存在** → 读取图谱数据，确认格式正确
+    a. **检测与初始化** — 检查当前项目根目录是否存在 `w-ocean/graph.json`（契约见 `.claude/references/w-ocean-graph-contract.md`）：
+       - **存在** → 读取图谱数据，按契约验证最小结构
        - **不存在** → 从 cc-kit 插件模板复制初始图谱：
          ```
-         # 定位 cc-kit 插件安装路径（多路径 fallback）
+         # 定位 cc-kit 插件安装路径
          CCKIT_PATH=$(claude plugin list 2>/dev/null | grep cc-kit | head -1 | awk '{print $NF}')
          if [ -z "$CCKIT_PATH" ] || [ ! -d "$CCKIT_PATH/plugin/templates/w-ocean" ]; then
-           # fallback 1: 默认插件目录
-           CCKIT_PATH="$HOME/.claude/plugins/cc-kit"
-         fi
-         if [ ! -d "$CCKIT_PATH/plugin/templates/w-ocean" ]; then
-           # fallback 2: 全局插件目录
+           # fallback: 默认插件目录
            CCKIT_PATH="$HOME/.claude/plugins/cc-kit"
          fi
          if [ ! -d "$CCKIT_PATH/plugin/templates/w-ocean" ]; then
@@ -238,8 +233,8 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
          - `graph.json`（图谱数据，替换 `__TEMPLATE_DATE__` 为当前日期）
          - `config.yaml`（配置）
          - `README.md`（文档）
-         - `commands/w-ocean.md`（本地 /w-ocean 命令）
-         - `skills/w-ocean-agent/SKILL.md`（本地维护 skill）
+         - `commands/w-ocean.md`（本地 /w-ocean 命令，模板为规范源）
+         - `skills/w-ocean-agent/SKILL.md`（本地维护 skill，模板为规范源）
        - 输出初始化确认 → "w-ocean 图谱已初始化：0 节点，0 边，含本地命令和 skill"
 
     b. **节点格式化** — 将改进建议中每个采纳的候选（skill/command/rule/agent/hook/memory/doc）格式化为 w-ocean 节点：

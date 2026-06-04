@@ -20,7 +20,6 @@ Claude Code 精选技能合集。**v1.5.3**
 | prototype | 原型设计与探索 |
 | triage | 问题分类与状态管理 |
 | zoom-out | 宏观视角与全局上下文 |
-| w-ocean-agent | w-ocean 知识图谱维护：去重/合并/关联建议/健康检查 |
 
 
 
@@ -77,7 +76,6 @@ Claude Code 精选技能合集。**v1.5.3**
 
 | 命令 | 用途 |
 |------|------|
-| `/w-ocean` | 浏览/查询/遍历当前项目的 w-ocean 知识图谱 |
 | `/publish` | 一键发布新版本 |
 | `/wsl-chatgpt` | WSL 终端操控 ChatGPT |
 

@@ -23,7 +23,7 @@ const GRAPH_PATH = 'w-ocean/graph.json'
 
 // 检测 w-ocean 是否存在，读取图谱数据
 const initCheck = await agent(
-  `检测文件 ${GRAPH_PATH} 是否存在。` +
+  `按 w-ocean-graph-contract.md 契约检测文件 ${GRAPH_PATH} 是否存在。` +
   `如果存在，读取并返回完整内容；如果不存在，返回 { exists: false }。`,
   {
     label: '检测:w-ocean-存在',
@@ -76,6 +76,7 @@ const initCheck = await agent(
         },
       },
       required: ['exists'],
+  // 完整 schema 定义见 .claude/references/w-ocean-graph-contract.md
     },
   },
 )
@@ -137,23 +138,51 @@ if (!args || !args.action) {
     `可用操作: 查看全部节点 / 按类型筛选 / 关键词搜索 / 从某节点遍历`
   )
 
-  // 用 agent 展示可交互的图谱概览
+
+  // 用 agent 生成概览摘要和推荐（代码做格式化，agent 只做 AI 判断）
+  const groupedNodes = new Map()
+  for (const n of graph.nodes) {
+    const list = groupedNodes.get(n.type) || []
+    list.push(n)
+    groupedNodes.set(n.type, list)
+  }
+  let formattedList = "按类型分组的节点列表：
+"
+  for (const [type, nodes] of groupedNodes) {
+    formattedList += "
+【" + type + "】" + nodes.length + " 个
+"
+    formattedList += nodes.map(n => "  • " + n.id + ": " + (n.summary || n.title)).join("
+") + "
+"
+  }
+
   const overview = await agent(
-    `分析以下 w-ocean 图谱数据，生成一段结构化的概览报告：\n\n` +
-    `节点数: ${graph.nodes.length}\n` +
-    `边数: ${graph.edges.length}\n\n` +
-    `全部节点:\n${graph.nodes.map(n => `- ${n.id} (${n.type}): ${n.summary || n.title}`).join('\n')}\n\n` +
-    `全部边:\n${graph.edges.map(e => `- ${e.from} ─${e.type}→ ${e.to}`).join('\n')}\n\n` +
-    `请输出：\n` +
-    `1. 图谱总览摘要（3-5 句话）\n` +
-    `2. 按类型分组的节点列表\n` +
-    `3. 推荐下一步探索方向（基于当前图结构）`,
+    `分析以下 w-ocean 图谱数据，生成概览报告：
+
+` +
+    `节点数: ${graph.nodes.length} | 边数: ${graph.edges.length}
+` +
+    `类型分布: ${typeSummary}
+` +
+    `关系分布: ${edgeSummary}
+
+` +
+    `${formattedList}
+
+` +
+    `请输出：
+` +
+    `1. 图谱总览摘要（3-5 句话）
+` +
+    `2. 推荐下一步探索方向（基于当前图结构）
+` +
+    `3. 图谱健康度评估（节点边比例是否合理、有无明显孤立节点）`,
     {
       label: '展示:w-ocean-概览',
       phase: '执行操作',
     },
   )
-
   log(overview)
 
   return { status: 'shown', graph }
@@ -230,21 +259,17 @@ if (args.action === 'show') {
     return { status: 'empty', filter: args.type }
   }
 
-  // 生成 Mermaid 图
+  // 生成 Mermaid 图（O(n+m) 用 Set + Map）
+  const safeIds = new Map(filtered.map(n => [n.id, n.id.replace(/[^a-zA-Z0-9]/g, '_')]))
+  const filteredIds = new Set(filtered.map(n => n.id))
   const mermaidLines = ['```mermaid', 'graph LR']
   for (const n of filtered) {
-    const label = `${n.title}\\n(${n.type})`
-    // sanitize id for mermaid
-    const safeId = n.id.replace(/[^a-zA-Z0-9]/g, '_')
-    mermaidLines.push(`  ${safeId}["${label}"]`)
+    const label = `${n.title}\n(${n.type})`
+    mermaidLines.push(`  ${safeIds.get(n.id)}["${label}"]`)
   }
   for (const e of graph.edges) {
-    const fromSafe = e.from.replace(/[^a-zA-Z0-9]/g, '_')
-    const toSafe = e.to.replace(/[^a-zA-Z0-9]/g, '_')
-    const fromExists = filtered.some(n => n.id === e.from)
-    const toExists = filtered.some(n => n.id === e.to)
-    if (fromExists && toExists) {
-      mermaidLines.push(`  ${fromSafe} --${e.type}--> ${toSafe}`)
+    if (filteredIds.has(e.from) && filteredIds.has(e.to)) {
+      mermaidLines.push(`  ${safeIds.get(e.from)} --${e.type}--> ${safeIds.get(e.to)}`)
     }
   }
   mermaidLines.push('```')
@@ -350,3 +375,106 @@ if (args.action === 'traverse') {
 // ─── 未知 action ───
 log(`未知操作: ${args.action}。支持的操作: add, show, query, traverse`)
 return { status: 'unknown-action', action: args.action }
+
+
+<!---
+工作流 YAML 声明（内嵌，替代独立 .yml 文件）：
+-->
+```yaml
+# yaml-language-server: $schema=./workflow-schema.json
+name: w-ocean
+description: 知识图谱工作流 — 浏览/查询/遍历 grow-dream 积累的模式，追加新节点
+phases:
+  - title: 加载图谱
+    detail: 读取 w-ocean/graph.json
+  - title: 执行操作
+    detail: 按 args 执行追加/浏览/查询/遍历
+  - title: 输出结果
+    detail: 展示图谱或确认追加
+
+args:
+  action: string
+  type: string
+  keyword: string
+  from: string
+  depth: number
+
+steps:
+
+  # ============================================================
+  # Phase 1: 加载图谱
+  # ============================================================
+  - id: load-graph
+    phase: 加载图谱
+    label: 加载 w-ocean 图谱
+    agent:
+      prompt: >
+        读取文件 w-ocean/graph.json，返回图谱的节点数和边数。
+        如果文件不存在，返回 { exists: false }。
+      output: graphInfo
+
+  # ============================================================
+  # Phase 2: 分发操作
+  # ============================================================
+
+  # ─── action=add ───
+  - id: add-nodes
+    phase: 执行操作
+    label: 追加节点到图谱
+    when: "{{args.action}} == 'add'"
+    agent:
+      prompt: >
+        读取 w-ocean/graph.json，将传入的 nodes 和 edges 合并进去。
+        去重规则：同 id 更新、同 (from,to,type) 的边跳过、refs 自动建 relates-to 边。
+        更新 meta 中的统计数字，写回文件。
+
+        追加的 nodes: {{args.nodes}}
+        追加的 edges: {{args.edges}}
+        来源: {{args.source}}
+      output: addResult
+
+  # ─── action=show ───
+  - id: show-graph
+    phase: 执行操作
+    label: 展示图谱
+    when: "{{args.action}} == 'show' || {{args.action}} == '' || {{args.action}} == null"
+    agent:
+      prompt: >
+        读取 w-ocean/graph.json，分析并展示图谱内容。
+        {% if args.type %}只展示 type={{args.type}} 的节点。{% endif %}
+        输出包含：节点统计、按类型分组、Mermaid 图、关键关联。
+      output: showResult
+
+  # ─── action=query ───
+  - id: query-graph
+    phase: 执行操作
+    label: 搜索节点
+    when: "{{args.action}} == 'query'"
+    agent:
+      prompt: >
+        在 w-ocean/graph.json 的节点中搜索包含 "{{args.keyword}}" 的节点。
+        搜索范围：id、title、summary、tags。
+        返回匹配结果和关联边。
+      output: queryResult
+
+  # ─── action=traverse ───
+  - id: traverse-graph
+    phase: 执行操作
+    label: 遍历图谱
+    when: "{{args.action}} == 'traverse'"
+    agent:
+      prompt: >
+        从 w-ocean/graph.json 的节点 "{{args.from}}" 出发，BFS 遍历最大深度 {{args.depth | default: 2}}。
+        显示路径树、标记循环依赖、输出 Mermaid 图。
+      output: traverseResult
+
+  # ============================================================
+  # Phase 3: 汇总输出
+  # ============================================================
+  - id: report
+    phase: 输出结果
+    label: 汇总报告
+    when: always
+    merge:
+      from: [addResult, showResult, queryResult, traverseResult, graphInfo]
+```

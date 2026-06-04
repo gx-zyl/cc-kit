@@ -1,7 +1,7 @@
 {
   "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "cc-kit",
-  "description": "技能合集：SpringBoot/Java/Vue/TS 开发模式 + WSL 环境工具 + 调试/TDD/审方案/极简沟通等通用 skill",
+  "description": "\u6280\u80fd\u5408\u96c6\uff1aSpringBoot/Java/Vue/TS \u5f00\u53d1\u6a21\u5f0f + WSL \u73af\u5883\u5de5\u5177 + \u8c03\u8bd5/TDD/\u5ba1\u65b9\u6848/\u6781\u7b80\u6c9f\u901a\u7b49\u901a\u7528 skill",
   "version": "1.5.3",
   "author": {
     "name": "l"
@@ -59,7 +59,6 @@
     "./skills/grow-dream",
     "./skills/chrome-devtools-wsl",
     "./skills/wsl-chatgpt",
-    "./skills/wsl-network",
-    "./skills/w-ocean-agent"
+    "./skills/wsl-network"
   ]
 }
