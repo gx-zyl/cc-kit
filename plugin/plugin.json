@@ -2,7 +2,7 @@
   "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "cc-kit",
   "description": "\u6280\u80fd\u5408\u96c6\uff1aSpringBoot/Java/Vue/TS \u5f00\u53d1\u6a21\u5f0f + WSL \u73af\u5883\u5de5\u5177 + \u8c03\u8bd5/TDD/\u5ba1\u65b9\u6848/\u6781\u7b80\u6c9f\u901a\u7b49\u901a\u7528 skill",
-  "version": "1.5.3",
+  "version": "1.5.4",
   "author": {
     "name": "l"
   },
