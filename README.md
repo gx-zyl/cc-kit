@@ -1,6 +1,6 @@
 # cc-kit
 
-Claude Code 精选技能合集。**v1.5.4**
+Claude Code 精选技能合集。**v1.5.5**
 
 ## 技能清单
 
