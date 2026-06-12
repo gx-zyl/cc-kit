@@ -214,7 +214,7 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
 10. **⑨ 图谱沉淀入库** — 将本次总结的结构化输出沉淀到当前项目的 `w-ocean/` 知识图谱：
 
     a. **检测与初始化** — 检查当前项目根目录是否存在 `w-ocean/graph.json`：
-       - **存在** → 读取图谱数据，验证 meta/nodeCount/edgeCount/nodes/edges 字段存在
+       - **存在** → 跳过（后续步骤会读取）
        - **不存在** → 从 cc-kit 插件模板复制初始图谱：
          ```
          # 定位 cc-kit 插件安装路径
@@ -253,13 +253,22 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
        - 时序关系（precedes）：按创建顺序链接
        - 通用关系（generalizes/relates-to）：同主题关联
 
-    d. **内联入库** — 直接通过 agent 操作 graph.json：
+    d. **内联入库** — 直接读写 `w-ocean/graph.json`：
 
-       1. 读取 `w-ocean/graph.json` 当前内容
-       2. 去重合并：新节点按 id 去重（同 id 更新 content/tags/refs，保留原始 created），新边按 (from, to, type) 去重
-       3. 自动建边：新节点 refs 引用的其他节点，自动创建 relates-to 边
-       4. 更新 meta 中的 nodeCount、edgeCount、updated 日期
-       5. 写回 `w-ocean/graph.json`
+       graph.json 结构：
+       ```json
+       { "meta": { "name": "w-ocean", "nodeCount": 0, "edgeCount": 0, "updated": "" },
+         "nodes": [{"id": "{type}-{kebab}", "type": "skill|rule|command|agent|hook|memory|doc|concept|decision",
+                    "title": "", "summary": "", "content": "", "source": "", "created": "", "tags": [], "refs": []}],
+         "edges": [{"from": "node-id", "to": "node-id", "type": "extends|depends-on|conflicts-with|generalizes|relates-to|precedes|triggers|refines|alternative"}] }
+       ```
+
+       - 读取 `w-ocean/graph.json` 当前内容
+       - 新节点按 id 去重：同 id 更新 content/tags/refs，保留原始 created
+       - 新边按 (from, to, type) 三元组去重
+       - 自动建边：新节点 refs 引用的其他节点，自动创建 relates-to 边
+       - 更新 meta.nodeCount、meta.edgeCount、meta.updated
+       - 写回 `w-ocean/graph.json`
 
     e. **图谱更新确认** — 确认追加结果，输出本次新增节点数、边数、图谱总览。
 
