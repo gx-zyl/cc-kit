@@ -1,6 +1,6 @@
 ---
 name: grow-dream
-description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE.md / AGENTS.md / memory 是否有改进空间，输出改进建议并可选择直接产出改进文件。识别有规律或频繁提醒的提示并建议写入 memory。通过结构化追问验收每个改进候选。最后将采纳的改进沉淀到 /w-ocean 知识图谱。用户说"改进"、"沉淀"、"提炼规则"、"这个经历能沉淀什么"、"有没有可以提炼成规则的模式"、"造梦"、"总结对话"、"提炼经验"、"固化模式"、"make dream"时触发。
+description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE.md / AGENTS.md / memory 是否有改进空间，输出改进建议并可选择直接产出改进文件。识别有规律或频繁提醒的提示并建议写入 memory。通过结构化追问验收每个改进候选。最后将采纳的改进沉淀到知识图谱 (w-ocean)。用户说"改进"、"沉淀"、"提炼规则"、"这个经历能沉淀什么"、"有没有可以提炼成规则的模式"、"造梦"、"总结对话"、"提炼经验"、"固化模式"、"make dream"时触发。
 ---
 
 # grow-dream — 对话回顾与能力成长
@@ -13,7 +13,7 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
                                          ──── 9 步流程 ────
 
   ┌────────────┐   ┌────────────┐   ┌────────────┐   ┌────────────┐   ┌────────────┐   ┌────────────┐   ┌────────────┐   ┌──────────────┐   ┌──────────────┐
-  │  ① 确定    │   │  ② 浏览    │   │  ③ 项目    │   │  ④ 交叉    │   │  ⑤ 分类    │   │  ⑥ 结构化   │   │  ⑦ 可选    │   │  ⑧ 追问    │   │  ⑨ /w-ocean  │
+  │  ① 确定    │   │  ② 浏览    │   │  ③ 项目    │   │  ④ 交叉    │   │  ⑤ 分类    │   │  ⑥ 结构化   │   │  ⑦ 可选    │   │  ⑧ 追问    │   │  ⑨ 图谱    │
   │  输入源    │──→│  识别模式   │──→│  文件对照   │──→│  检查矛盾   │──→│  提炼归类   │──→│  输出建议   │──→│  执行产出   │──→│  追问验收     │──→│  沉淀入库     │
   └────────────┘   └────────────┘   └────────────┘   └────────────┘   └────────────┘   └────────────┘   └────────────┘   └──────────────┘   └──────────────┘
        │                 │                │                 │                │                 │               │               │               │
@@ -40,7 +40,7 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
               │           └──────┬─────────────┴───────────┬──────────┘                            │
               │                  │                         │                                       │
               │          ┌───────▼───────────┐    ┌────────▼──────────┐     ┌─────────────────┐    │
-              │          │  hook 自动化      │    │  CLAUDE.md /      │     │  /w-ocean 知识    │    │
+              │          │  hook 自动化      │    │  CLAUDE.md /      │     │  知识图谱        │    │
               │          │  .claude/hooks/   │    │  AGENTS.md        │     │  有向图谱        │    │
               │          └───────────────────┘    └───────────────────┘     │  w-ocean/        │    │
               └─────────────────────────────────────────────────────────────└───────────────────┘──┘
@@ -67,7 +67,7 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
                            └────────────┘        └─────────────────┘          │        │
                                         └──────────────────────────────────────        │
                                                                                        │
-                                                       ⑨ /w-ocean 沉淀 ────────────────┘
+                                                       ⑨ 图谱沉淀 ────────────────────┘
                                                          每次总结追加为节点
                                                          ─────── 反馈回路 ───────
                                                         下次 grow-dream 步骤②
@@ -211,25 +211,25 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
 
    验收结论以表格追加到输出末尾（见输出格式 `## 追问验收`）。
 
-10. **⑨ /w-ocean 沉淀入库** — 将本次总结的结构化输出沉淀到当前项目的 `w-ocean/` 知识图谱：
+10. **⑨ 图谱沉淀入库** — 将本次总结的结构化输出沉淀到当前项目的 `w-ocean/` 知识图谱：
 
-    a. **检测与初始化** — 检查当前项目根目录是否存在 `w-ocean/graph.json`（契约见 `.claude/references/w-ocean-graph-contract.md`）：
+    a. **检测与初始化** — 检查当前项目根目录是否存在 `w-ocean/graph.json`：
        - **存在** → 读取图谱数据，按契约验证最小结构
        - **不存在** → 从 cc-kit 插件模板复制初始图谱：
          ```
          # 定位 cc-kit 插件安装路径
          CCKIT_PATH=$(claude plugin list 2>/dev/null | grep cc-kit | head -1 | awk '{print $NF}')
-         if [ -z "$CCKIT_PATH" ] || [ ! -d "$CCKIT_PATH/plugin/templates/w-ocean" ]; then
+         if [ -z "$CCKIT_PATH" ] || [ ! -d "$CCKIT_PATH/plugin/skills/grow-dream/templates/w-ocean" ]; then
            # fallback: 默认插件目录
            CCKIT_PATH="$HOME/.claude/plugins/cc-kit"
          fi
-         if [ ! -d "$CCKIT_PATH/plugin/templates/w-ocean" ]; then
-           echo "错误：找不到 cc-kit 插件模板，请确认 'claude plugin list | grep cc-kit' 有输出"
+         if [ ! -d "$CCKIT_PATH/plugin/skills/grow-dream/templates/w-ocean" ]; then
+           echo "错误：找不到 grow-dream 模板，请确认 'claude plugin list | grep cc-kit' 有输出"
            exit 1
          fi
-         WOCEAN_TPL="$CCKIT_PATH/plugin/templates/w-ocean"
+         WOCEAN_TPL="$CCKIT_PATH/plugin/skills/grow-dream/templates/w-ocean"
          ```
-         复制 `plugin/templates/w-ocean/` 下所有内容到项目根目录的 `w-ocean/`：
+         复制 `plugin/skills/grow-dream/templates/w-ocean/` 下所有内容到项目根目录的 `w-ocean/`：
          - `graph.json`（图谱数据，替换 `__TEMPLATE_DATE__` 为当前日期）
          - `config.yaml`（配置）
          - `README.md`（文档）
@@ -253,11 +253,17 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
        - 时序关系（precedes）：按创建顺序链接
        - 通用关系（generalizes/relates-to）：同主题关联
 
-    d. **调用 Workflow** — 调用 `Workflow({name: "w-ocean", args: {action: "add", nodes: [...], edges: [...], source: "..."}})` 将节点和边追加到图谱。Workflow 会自动去重、更新统计。
+    d. **内联入库** — 直接通过 agent 操作 graph.json：
+
+       1. 读取 `w-ocean/graph.json` 当前内容
+       2. 去重合并：新节点按 id 去重（同 id 更新 content/tags/refs，保留原始 created），新边按 (from, to, type) 去重
+       3. 自动建边：新节点 refs 引用的其他节点，自动创建 relates-to 边
+       4. 更新 meta 中的 nodeCount、edgeCount、updated 日期
+       5. 写回 `w-ocean/graph.json`
 
     e. **图谱更新确认** — 确认追加结果，输出本次新增节点数、边数、图谱总览。
 
-    f. 产出追加到输出格式的 `## /w-ocean 沉淀` 章节。
+    f. 产出追加到输出格式的 `## 图谱沉淀` 章节。
 
 ## 输出格式
 
@@ -302,7 +308,7 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
 |------|------|------|
 | [名称] | 采纳 / 放弃 / 需补充 | [简短理由] |
 
-## /w-ocean 沉淀
+## 图谱沉淀
 
 | 指标 | 值 |
 |------|----|
@@ -335,7 +341,7 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
 | **agent** | `.claude/agents/<name>.md`（YAML frontmatter + Markdown 体） | 持续运行、有决策自主权、面向特定领域；Claude Code CLI subagent 格式 |
 | **hook** | `.claude/hook.<event>.sh` | 特定 git/claude 事件触发、无交互的自动化 |
 | **memory** | `memory/<name>.md` + 更新 `MEMORY.md` 索引 | 频次 ≥2 的规律提醒、反复纠正、跨会话偏好的持久化 |
-| **/w-ocean 节点** | `w-ocean/graph.json`（通过 Workflow 追加） | 每轮 grow-dream 总结完成后自动调用 |
+| **图谱节点** | `w-ocean/graph.json`（内联入库） | 每轮 grow-dream 总结完成后自动调用 |
 
 ## 入口图要求
 
@@ -362,4 +368,4 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
 - [ ] **memory 完整性**：频次 ≥2 的规律提醒已写入 memory？已有 memory 条目是否因本次发现需要补充或废弃？MEMORY.md 索引是否同步更新？
 - [ ] **追问验收**：每个改进候选已过追问验收，输出明确判定（采纳/放弃/需补充）
 - [ ] **skill 结构合规**（有 skill 产出时）：检查 `.claude/references/skill-structure.md`，确认 SKILL.md 职责清晰、references/ 和 scripts/ 已分离、description 为触发场景而非宣传语
-- [ ] **/w-ocean 沉淀完整性**：已将所有采纳候选格式化为节点并追加到 w-ocean 图谱？节点 ID 格式正确？边关联已识别？Workflow 调用已执行并确认？
+- [ ] **图谱沉淀完整性**：已将所有采纳候选格式化为节点并追加到图谱？节点 ID 格式正确？边关联已识别？入库操作已执行并确认？
