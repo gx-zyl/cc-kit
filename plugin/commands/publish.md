@@ -11,7 +11,6 @@ description: 一键发布：更新文档 → commit → tag → push
    - `plugin/plugin.json`
    - `.claude-plugin/marketplace.json`
    - `README.md`
-   - `docs/DONE.md`（按需）
 2. `git add -A && git commit`
 3. `git tag -a cc-kit--v{version}`
 4. `git push origin main --tags`（需代理）
