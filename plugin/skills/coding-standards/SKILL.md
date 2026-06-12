@@ -10,8 +10,7 @@ Baseline coding conventions applicable across projects.
 
 This skill is the shared floor, not the detailed framework playbook.
 
-- Use `frontend-patterns` for React, state, forms, rendering, and UI architecture.
-- Use `backend-patterns` or `api-design` for repository/service layers, endpoint design, validation, and server-specific concerns.
+- Use `api-design` for repository/service layers, endpoint design, validation, and server-specific concerns.
 - Use `rules/common/coding-style.md` when you need the shortest reusable rule layer instead of a full skill walkthrough.
 
 ## When to Activate
@@ -29,7 +28,7 @@ Activate this skill for:
 - descriptive naming
 - immutability defaults
 - readability, KISS, DRY, and YAGNI enforcement
-- error-handling expectations and code-smell review
+- error handling expectations and code-smell review
 
 Do not use this skill as the primary source for:
 - React composition, hooks, or rendering patterns
