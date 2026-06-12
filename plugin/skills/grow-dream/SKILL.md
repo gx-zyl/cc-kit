@@ -214,7 +214,7 @@ description: 回顾本次对话，分析对 skill / rule / agent / hook / CLAUDE
 10. **⑨ 图谱沉淀入库** — 将本次总结的结构化输出沉淀到当前项目的 `w-ocean/` 知识图谱：
 
     a. **检测与初始化** — 检查当前项目根目录是否存在 `w-ocean/graph.json`：
-       - **存在** → 读取图谱数据，按契约验证最小结构
+       - **存在** → 读取图谱数据，验证 meta/nodeCount/edgeCount/nodes/edges 字段存在
        - **不存在** → 从 cc-kit 插件模板复制初始图谱：
          ```
          # 定位 cc-kit 插件安装路径
