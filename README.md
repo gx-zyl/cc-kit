@@ -1,6 +1,6 @@
 # cc-kit
 
-Claude Code 精选技能合集。**v1.6.4**
+Claude Code 精选技能合集。**v1.6.5**
 
 ## 技能清单
 
@@ -66,6 +66,20 @@ git clone https://github.com/gx-zyl/cc-kit.git ~/.claude/plugins/cc-kit
 cd ~/.claude/plugins/cc-kit && git fetch --tags origin && git checkout cc-kit--v{version}
 ```
 或通过 `claude plugin marketplace update` 自动更新。
+
+## OpenCode 支持
+
+cc-kit 也兼容 [OpenCode](https://opencode.ai) — 开源 AI 编码 Agent。所有 19 个技能和 2 个命令已标记 `compatibility: opencode`，可直接在 OpenCode 中调用。
+
+| 目录 | 说明 |
+|------|------|
+| `.opencode/opencode.json` | 项目配置，`instructions` 引用原始规则文件 |
+| `.opencode/AGENTS.md` | Agent 行为指令（仅含 CLAUDE.md 独有规则） |
+| `.opencode/skill/` | 19 个技能（含附属脚本/模板，由 `scripts/sync-opencode.ps1` 同步） |
+| `.opencode/command/` | publish、wsl-chatgpt 命令 |
+| `.opencode/doc/` | 参考文档（skill-structure、grow-dream-types） |
+
+> **维护：** 源文件 `plugin/skills/<name>/SKILL.md` 已包含 `compatibility: opencode`，是单一事实来源。`.opencode/` 由 `pwsh scripts/sync-opencode.ps1` 同步生成。
 
 ## 推荐终端配置
 

@@ -1,0 +1,27 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "name": "cc-kit",
+  "description": "技能合集：思维沟通 + 开发模式 + WSL 环境工具，共 19 个精选 skill",
+  "version": "1.6.5",
+  "author": {
+    "name": "磨砖做镜",
+    "url": "https://github.com/gx-zyl"
+  },
+  "license": "MIT",
+  "theme": "opencode",
+  "instructions": [
+    "./AGENTS.md",
+    "../CLAUDE.md",
+    "../.claude/rules/proxy-management.md",
+    "../.claude/rules/wsl-cli-tools.md",
+    "../.claude/rules/mise-omz-loading-order.md",
+    "../.claude/rules/wsl-env-audit.md",
+    "../.claude/references/skill-structure.md",
+    "../.claude/references/grow-dream-types.md"
+  ],
+  "permission": {
+    "skill": {
+      "*": "allow"
+    }
+  }
+}
