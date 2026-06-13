@@ -1,0 +1,13 @@
+{
+  "$schema": "https://opencode.ai/config.json",
+  "references": {
+    "rules": {
+      "path": ".claude/rules",
+      "description": "WSL 环境、代理、mise 等 CLI 工具配置规则"
+    },
+    "grow-dream": {
+      "path": ".claude/references",
+      "description": "grow-dream 类型定义和 skill 结构说明"
+    }
+  }
+}
