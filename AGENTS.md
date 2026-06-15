@@ -1,4 +1,4 @@
-# cc-kit — OpenCode Skill Collection v1.7.0
+# cc-kit — OpenCode Skill Collection v1.7.1
 
 > Skills count: 19 (update this when adding/removing skills in `plugin/skills/`)
 

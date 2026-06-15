@@ -2,7 +2,7 @@
   "$schema": "https://anthropic.com/claude-code/plugin.schema.json",
   "name": "cc-kit",
   "description": "技能合集：思维沟通 + 开发模式 + WSL 环境工具，共 19 个精选 skill",
-  "version": "1.7.0",
+  "version": "1.7.1",
   "author": {
     "name": "l"
   },
