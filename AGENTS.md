@@ -1,4 +1,4 @@
-# cc-kit — OpenCode Skill Collection v1.7.1
+# cc-kit — OpenCode Skill Collection v1.8.0
 
 > Skills count: 19 (update this when adding/removing skills in `.opencode/skills/`)
 
