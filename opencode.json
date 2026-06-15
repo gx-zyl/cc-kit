@@ -8,6 +8,16 @@
     "grow-dream": {
       "path": ".claude/references",
       "description": "grow-dream 类型定义和 skill 结构说明"
+    },
+    "memory": {
+      "description": "项目记忆：架构决策、问题修复、环境配置等历史记录",
+      "path": ".opencode/memory"
     }
-  }
+  },
+  "plugin": [".opencode/plugin/cc-kit.ts"],
+  "instructions": [
+    "CLAUDE.md",
+    ".claude/rules/*.md",
+    ".claude/references/*.md"
+  ]
 }

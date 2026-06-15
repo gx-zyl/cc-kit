@@ -1,6 +1,6 @@
 # cc-kit
 
-Claude Code 精选技能合集。**v1.7.0**
+Claude Code / OpenCode 精选技能合集。**v1.7.0**
 
 ## 技能清单
 
@@ -69,17 +69,22 @@ cd ~/.claude/plugins/cc-kit && git fetch --tags origin && git checkout cc-kit--v
 
 ## OpenCode 支持
 
-cc-kit 也兼容 [OpenCode](https://opencode.ai) — 开源 AI 编码 Agent。所有 19 个技能和 2 个命令已标记 `compatibility: opencode`，可直接在 OpenCode 中调用。
+cc-kit 完全兼容 [OpenCode](https://opencode.ai) — 开源 AI 编码 Agent。所有 19 个技能和 2 个命令可直接在 OpenCode 中调用。
 
-| 目录 | 说明 |
+| 配置 | 说明 |
 |------|------|
-| `.opencode/opencode.json` | 项目配置，`instructions` 引用原始规则文件 |
-| `.opencode/AGENTS.md` | Agent 行为指令（仅含 CLAUDE.md 独有规则） |
-| `.opencode/skill/` | 19 个技能（含附属脚本/模板，由 `scripts/sync-opencode.ps1` 同步） |
-| `.opencode/command/` | publish、wsl-chatgpt 命令 |
-| `.opencode/doc/` | 参考文档（skill-structure、grow-dream-types） |
+| `opencode.json` | 项目配置，`plugin` 引用 `cc-kit.ts` 注入技能路径和命令 |
+| `AGENTS.md` | OpenCode 项目指令与快速参考 |
+| `.opencode/plugin/cc-kit.ts` | OpenCode 插件：自动注册 `skills.paths` + `command` |
+| `.opencode/memory/` | 持久化项目记忆 |
 
-> **维护：** 源文件 `plugin/skills/<name>/SKILL.md` 已包含 `compatibility: opencode`，是单一事实来源。`.opencode/` 由 `pwsh scripts/sync-opencode.ps1` 同步生成。
+### 技能发现
+
+OpenCode 插件 `.opencode/plugin/cc-kit.ts` 在启动时自动将 `plugin/skills` 注入 `skills.paths`，同时注册 `/publish` 和 `/wsl-chatgpt` 命令。每个 `SKILL.md` 已包含 `compatibility: opencode`。
+
+### 规则加载
+
+`CLAUDE.md`、`.claude/rules/*.md`、`.claude/references/*.md` 通过 `opencode.json` 的 `instructions` 字段自动加载。
 
 ## 推荐终端配置
 

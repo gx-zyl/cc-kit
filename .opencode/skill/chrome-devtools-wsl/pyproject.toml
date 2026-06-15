@@ -1,8 +1,0 @@
-[project]
-name = "chrome-devtools-wsl"
-version = "0.1.0"
-description = "Windows Chrome 远程调试管理 — WSL Agent 连接工具"
-requires-python = ">=3.10"
-dependencies = [
-    "websockets==15.0.1",
-]
