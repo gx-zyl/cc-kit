@@ -1,7 +1,6 @@
 ---
 name: wsl-network
-description: WSL 网络工具集 — 获取 Windows 主机 IP、配置 HTTP/SOCKS5 代理、Git 全局代理
-tags: [wsl, network, proxy, ip, vpn]
+description: WSL 网络工具集 — 获取 Windows 主机 IP、配置 HTTP/SOCKS5 代理、Git 全局代理。用户说 WSL 网络、代理、proxy、VPN、网络配置时触发。
 compatibility: opencode
 ---
 

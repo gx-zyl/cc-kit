@@ -1,12 +1,6 @@
 ---
 name: wsl-chatgpt
-description: WSL 通过 CDP 桥接 Windows Chrome，自动化操作 ChatGPT 网页（提问、获取回答）
-trigger:
-  - wsl-chatgpt
-  - wsl 问 chatgpt
-  - wsl chatgpt
-  - 浏览器 chatgpt
-  - 从 wsl 问 ai
+description: WSL 通过 CDP 桥接 Windows Chrome，自动化操作 ChatGPT 网页（提问、获取回答）。用户说 wsl-chatgpt、wsl 问 chatgpt、wsl chatgpt、浏览器 chatgpt、从 wsl 问 ai 时触发。
 compatibility: opencode
 ---
 

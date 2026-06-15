@@ -1,7 +1,6 @@
 ---
 name: coding-standards
 description: 通用编码规范：命名、结构、文档、代码审查。用户说编码规范、代码风格时触发。
-origin: ECC
 compatibility: opencode
 ---
 

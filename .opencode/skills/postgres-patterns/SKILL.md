@@ -1,7 +1,6 @@
 ---
 name: postgres-patterns
 description: PostgreSQL 模式：表设计、索引优化、查询调优、分区、全文搜索。用户说 PostgreSQL、SQL 优化时触发。
-origin: ECC
 compatibility: opencode
 ---
 

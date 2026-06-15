@@ -1,7 +1,6 @@
 ---
 name: architecture-decision-records
 description: 架构决策记录（ADR）格式和流程。用户说写 ADR、记录架构决策、设计文档时触发。
-origin: ECC
 compatibility: opencode
 ---
 

@@ -1,7 +1,6 @@
 ---
 name: handoff
-description: 把当前对话压缩成交接文档，方便另一个 AI agent 接力。带"推荐技能"章节。
-argument-hint: "下个会话要做什么？"
+description: 把当前对话压缩成交接文档，方便另一个 AI agent 接力。带"推荐技能"章节。用户说交接、接力、handoff、总结对话、传给另一个 AI 时触发。
 compatibility: opencode
 ---
 

@@ -1,4 +1,4 @@
-# cc-kit — OpenCode Skill Collection v1.8.0
+# cc-kit — OpenCode Skill Collection v2.0.0
 
 > Skills count: 19 (update this when adding/removing skills in `.opencode/skills/`)
 
@@ -6,10 +6,12 @@
 
 | Path | Purpose |
 |------|---------|
-| `.opencode/skills/` | 19 skills (auto-discovered by OpenCode) |
-| `.opencode/commands/` | publish、wsl-chatgpt 命令 |
+| `.opencode/skills/` | 19 skills with YAML frontmatter (name + description + triggers) |
+| `.opencode/command/` | publish、wsl-chatgpt 命令（oh-my-openagent 约定） |
+| `.opencode/commands/` | 同 command/，兼容旧版路径 |
 | `.opencode/rules/` | Environment & dev tool rules (loaded via `instructions`) |
 | `.opencode/references/` | Reference docs (grow-dream types, skill structure) |
+| `.opencode/AGENTS.md` | Project-scope agent instructions |
 | `.opencode/memory/` | Persistent project memory |
 
 ## Key Commands
@@ -27,4 +29,6 @@
 ## Conventions
 
 - Source of truth: `.opencode/skills/<name>/SKILL.md`
+- Skill frontmatter: `name` + `description` (trigger words embedded in description)
+- Command frontmatter: `description` + optional `argument-hint`
 - PowerShell on Windows, `pwsh` shell

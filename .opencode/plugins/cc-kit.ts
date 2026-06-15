@@ -7,6 +7,21 @@ import { existsSync } from "node:fs"
 
 const __dirname = dirname(fileURLToPath(import.meta.url))
 
+/**
+ * Parse YAML frontmatter from a markdown file.
+ * Returns { name, description } or null if no valid frontmatter.
+ */
+function parseFrontmatter(content: string): { name?: string; description?: string } | null {
+  const match = content.match(/^---\s*\n([\s\S]*?)\n---/)
+  if (!match) return null
+  const frontmatter: Record<string, string> = {}
+  for (const line of match[1].split("\n")) {
+    const kv = line.match(/^(\w+):\s*(.+)/)
+    if (kv) frontmatter[kv[1]] = kv[2].trim()
+  }
+  return frontmatter.name || frontmatter.description ? frontmatter : null
+}
+
 export const CcKit: Plugin = async ({ project, client, $, directory, worktree }) => {
   const skillsDir = join(__dirname, "..", "skills")
 
@@ -16,20 +31,6 @@ export const CcKit: Plugin = async ({ project, client, $, directory, worktree })
       cfg.skills.paths = cfg.skills.paths || []
       if (!cfg.skills.paths.includes(skillsDir)) {
         cfg.skills.paths.push(skillsDir)
-      }
-
-      cfg.command = cfg.command || {}
-      if (!cfg.command.publish) {
-        cfg.command.publish = {
-          description: "一键发布：更新文档 → commit → tag → push",
-          template: `/publish <version>\n\n前置条件：运行前确认版本号已定好。\n1. 更新 README.md 顶部的 **v{version}** 和 AGENTS.md 的版本号\n2. git add -A && git commit -m "chore: bump version {version}"\n3. git tag -a cc-kit--v{version} -m "cc-kit v{version}"\n4. git push origin main --tags（需代理）`
-        }
-      }
-      if (!cfg.command["wsl-chatgpt"]) {
-        cfg.command["wsl-chatgpt"] = {
-          description: "WSL 终端通过 Windows Chrome CDP 向 ChatGPT 提问",
-          template: "调用 wsl-chatgpt skill，通过 CDP 桥接在 Windows Chrome 中操作 ChatGPT。\n- 有参数：直接作为问题发送\n- 无参数：从对话上下文提取最后一个问题\n- 依赖 skill：wsl-chatgpt、chrome-devtools-wsl"
-        }
       }
     },
 
@@ -51,8 +52,8 @@ export const CcKit: Plugin = async ({ project, client, $, directory, worktree })
               continue
             }
             const content = await readFile(skillPath, "utf-8")
-            const desc = content.match(/^description:\s*(.+)/m)
-            lines.push(`- ${d.name}: ${desc ? desc[1] : "无描述"}`)
+            const fm = parseFrontmatter(content)
+            lines.push(`- ${fm?.name ?? d.name}: ${fm?.description ?? "无描述"}`)
           }
           return `## cc-kit 技能清单 (${lines.length} 个)\n\n${lines.join("\n")}`
         }
@@ -76,8 +77,9 @@ export const CcKit: Plugin = async ({ project, client, $, directory, worktree })
                 issues.push(`${d.name}/SKILL.md 缺失`)
               } else {
                 const content = await readFile(skillPath, "utf-8")
-                if (!content.includes("name:")) issues.push(`${d.name}: 缺 name 字段`)
-                if (!content.includes("description:")) issues.push(`${d.name}: 缺 description 字段`)
+                const fm = parseFrontmatter(content)
+                if (!fm || !fm.name) issues.push(`${d.name}: 缺 name 字段`)
+                if (!fm || !fm.description) issues.push(`${d.name}: 缺 description 字段`)
               }
             }
           } else {

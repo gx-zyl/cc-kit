@@ -1,7 +1,6 @@
 ---
 name: docker-patterns
 description: Docker 模式：镜像优化、多阶段构建、网络、安全、Compose。用户说 Docker、容器化时触发。
-origin: ECC
 compatibility: opencode
 ---
 

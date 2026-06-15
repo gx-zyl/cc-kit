@@ -1,7 +1,6 @@
 ---
 name: chrome-devtools-wsl
-description: 操控 Windows Chrome — 导航/截图/JS/CDP/API 桥接，替代 web-access CDP Proxy
-tags: [chrome, devtools, wsl, cdp, browser, automation, web-access]
+description: 操控 Windows Chrome — 导航/截图/JS/CDP/API 桥接，替代 web-access CDP Proxy。用户说操控 Chrome、浏览器自动化、CDP、devtools 时触发。
 compatibility: opencode
 ---
 
