@@ -1,16 +1,15 @@
 # cc-kit — OpenCode Skill Collection v1.7.1
 
-> Skills count: 19 (update this when adding/removing skills in `plugin/skills/`)
+> Skills count: 19 (update this when adding/removing skills in `.opencode/skills/`)
 
 ## Project Layout
 
 | Path | Purpose |
 |------|---------|
-| `plugin/skills/` | 19 skills (loaded via plugin) |
-| `plugin/commands/` | Claude-native commands (deprecated) |
-| `.claude/rules/` | Environment & dev tool rules (loaded via `instructions`) |
-| `.claude/references/` | Reference docs (loaded via `instructions`) |
-| `.opencode/plugin/cc-kit.ts` | OpenCode plugin: injects skills.paths + commands |
+| `.opencode/skills/` | 19 skills (auto-discovered by OpenCode) |
+| `.opencode/commands/` | publish、wsl-chatgpt 命令 |
+| `.opencode/rules/` | Environment & dev tool rules (loaded via `instructions`) |
+| `.opencode/references/` | Reference docs (grow-dream types, skill structure) |
 | `.opencode/memory/` | Persistent project memory |
 
 ## Key Commands
@@ -27,6 +26,5 @@
 
 ## Conventions
 
-- Source of truth: `plugin/skills/<name>/SKILL.md` (single source, dual compatibility)
-- All skills have `compatibility: opencode` in frontmatter
+- Source of truth: `.opencode/skills/<name>/SKILL.md`
 - PowerShell on Windows, `pwsh` shell
