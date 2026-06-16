@@ -1,6 +1,6 @@
 # cc-kit
 
-OpenCode 精选技能合集。**v2.0.0**
+Claude Code 精选技能合集。**v2.0.0**
 
 ## 技能清单
 
@@ -35,60 +35,54 @@ OpenCode 精选技能合集。**v2.0.0**
 | Skill | 用途 |
 |-------|------|
 | chrome-devtools-wsl | Chrome CDP 桥接（WSL→Windows） |
-| wsl-chatgpt | WSL 终端操控 ChatGPT / `/wsl-chatgpt` 命令 |
+| wsl-chatgpt | WSL 终端操控 ChatGPT |
 | wsl-network | WSL 网络代理 + 防火墙配置 |
 
 > 首次使用 `chrome-devtools-wsl`：复制 `.env.example` 为 `.env` 并确认路径。
 
-### 命令
-
-| 命令 | 用途 |
-|------|------|
-| `/publish` | 一键发布新版本 |
-| `/wsl-chatgpt` | WSL 终端操控 ChatGPT |
-
-### 工作流
-
-| Workflow | 用途 |
-|----------|------|
-| release | 发版工作流 |
-| marketplace-doctor | 市场医生 |
-
-> grow-dream 第⑨步自带知识图谱入库能力，无需独立 workflow。
-
 ## 安装
 
-```bash
-# 首次安装
-git clone https://github.com/gx-zyl/cc-kit.git
+### 方式一：项目内使用（开发/测试）
 
-# 在项目根目录运行 opencode，自动加载所有技能和命令
-cd cc-kit && opencode
+```bash
+git clone https://github.com/gx-zyl/cc-kit.git
+cd cc-kit && claude --plugin-dir .
 ```
 
-## OpenCode 支持
+### 方式二：全局安装为插件
 
-cc-kit 完全兼容 [OpenCode](https://opencode.ai) — 开源 AI 编码 Agent。所有 19 个技能和 2 个命令已迁移至 `.opencode/`。
+```bash
+git clone https://github.com/gx-zyl/cc-kit.git
+ln -s "$(pwd)/cc-kit" ~/.claude/skills/cc-kit   # macOS/Linux
+# Windows: 复制或 junction 到 %USERPROFILE%\.claude\skills\cc-kit
+```
 
-| 配置 | 说明 |
-|------|------|
-| `opencode.json` | 项目配置，`instructions` 引用规则文件 |
-| `AGENTS.md` | OpenCode 项目指令与快速参考 |
-| `.opencode/skills/` | 19 个技能（YAML frontmatter: name + description + trigger 词） |
-| `.opencode/command/` | publish、wsl-chatgpt 命令（oh-my-openagent 约定） |
-| `.opencode/commands/` | 同 command/，兼容旧版路径 |
-| `.opencode/rules/` | WSL 环境、代理、mise 等规则 |
-| `.opencode/references/` | 参考文档（skill-structure、grow-dream-types） |
-| `.opencode/AGENTS.md` | Project-scope agent 配置 |
-| `.opencode/memory/` | 持久化项目记忆 |
+安装后，在任何目录运行 `claude` 都会自动加载 cc-kit 的 19 个技能。
 
-### 技能发现
+### 方式三：Windows 直接克隆到插件目录
 
-OpenCode 自动从 `.opencode/skills/` 发现所有技能（OpenCode 原生路径），无需额外配置。
+```pwsh
+git clone https://github.com/gx-zyl/cc-kit.git "$env:USERPROFILE\.claude\skills\cc-kit"
+```
 
-### 规则加载
+## 架构
 
-`.opencode/rules/CLAUDE.md`、`.opencode/rules/*.md`、`.opencode/references/*.md` 通过 `opencode.json` 的 `instructions` 字段自动加载。
+cc-kit 是一个 **Claude Code 插件**，遵循标准插件结构：
+
+### 插件层（自动加载）
+
+| 组件 | 路径 | 说明 |
+|------|------|------|
+| **插件清单** | `.claude-plugin/plugin.json` | 元数据：name、version、skills 路径 |
+| **19 个技能** | `skills/<name>/SKILL.md` | 由插件自动发现，无需配置 |
+
+### 项目层（cc-kit 自身开发）
+
+| 配置 | 路径 | 说明 |
+|------|------|------|
+| 项目设置 | `.claude/settings.json` | 加载指令文件（CLAUDE.md + rules + references） |
+| 规则 | `.claude/rules/` | WSL 环境、代理、mise 等规则 |
+| 参考 | `.claude/references/` | skill-structure、grow-dream-types |
 
 ## 推荐终端配置
 

@@ -20,10 +20,3 @@ uv.lock
 .env
 fix1
 docs
-
-# opencode 插件 TS 编译自动生成文件
-.opencode/node_modules/
-.opencode/package.json
-.opencode/package-lock.json
-.opencode/bun.lock
-.opencode/.gitignore
