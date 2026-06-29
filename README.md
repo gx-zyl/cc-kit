@@ -1,6 +1,6 @@
 # cc-kit
 
-Claude Code 精选技能合集。**v3.0.0**
+Claude Code 精选技能合集。**v3.0.1**
 
 ## 技能清单
 
@@ -14,7 +14,6 @@ Claude Code 精选技能合集。**v3.0.0**
 | grill-me | AI 拷打设计 |
 | write-a-skill | 创建自定义 Skill |
 | karpathy-guidelines | LLM 编码行为指南 |
-| huangting-protocol | 黄庭协议 — 任务生命周期管理 |
 | github-repo | GitHub 仓库创建 & CI |
 | improve-codebase-architecture | 代码架构改进与重构 |
 | prototype | 原型设计与探索 |
@@ -25,9 +24,7 @@ Claude Code 精选技能合集。**v3.0.0**
 | Skill | 用途 |
 |-------|------|
 | api-design | REST API 设计模式 |
-| coding-standards | 跨项目编码规范 |
 | docker-patterns | Docker/Compose 模式 |
-| postgres-patterns | PostgreSQL 模式 |
 | architecture-decision-records | 架构决策记录 (ADR) |
 
 ### WSL 环境工具
@@ -35,7 +32,6 @@ Claude Code 精选技能合集。**v3.0.0**
 | Skill | 用途 |
 |-------|------|
 | chrome-devtools-wsl | Chrome CDP 桥接（WSL→Windows） |
-| wsl-chatgpt | WSL 终端操控 ChatGPT |
 | wsl-network | WSL 网络代理 + 防火墙配置 |
 
 > 首次使用 `chrome-devtools-wsl`：复制 `.env.example` 为 `.env` 并确认路径。
@@ -57,7 +53,7 @@ ln -s "$(pwd)/cc-kit" ~/.claude/skills/cc-kit   # macOS/Linux
 # Windows: 复制或 junction 到 %USERPROFILE%\.claude\skills\cc-kit
 ```
 
-安装后，在任何目录运行 `claude` 都会自动加载 cc-kit 的 19 个技能。
+安装后，在任何目录运行 `claude` 都会自动加载 cc-kit 的 15 个技能。
 
 ### 方式三：Windows 直接克隆到插件目录
 
@@ -74,14 +70,14 @@ cc-kit 是一个 **Claude Code 插件**，遵循标准插件结构：
 | 组件 | 路径 | 说明 |
 |------|------|------|
 | **插件清单** | `.claude-plugin/plugin.json` | 元数据：name、version、skills 路径 |
-| **19 个技能** | `skills/<name>/SKILL.md` | 由插件自动发现，无需配置 |
+| **15 个技能** | `skills/<name>/SKILL.md` | 由插件自动发现，无需配置 |
 
 ### 项目层（cc-kit 自身开发）
 
 | 配置 | 路径 | 说明 |
 |------|------|------|
-| 项目设置 | `.claude/settings.json` | 加载指令文件（CLAUDE.md + rules + references） |
-| 规则 | `.claude/rules/` | WSL 环境、代理、mise 等规则 |
+| 项目设置 | `.claude/settings.json` | 加载指令文件（CLAUDE.md + references） |
+| 规则 | `rules/` | WSL 工具链、代理、mise 等规则（随插件分发，通过 `settings.json` 指令数组加载） |
 | 参考 | `.claude/references/` | skill-structure、grow-dream-types |
 
 ## 推荐终端配置
@@ -126,4 +122,4 @@ if (Get-Command zoxide -ErrorAction SilentlyContinue) {
 
 首次使用：`cd` 到几个目录转转，zoxide 自动记录，之后就能 `z <关键词>` 或 `zi` 跳转了。
 
-> 详细配置（WSL 环境、别名、更多工具链）见 `.claude/rules/wsl-cli-tools.md`。
+> 详细配置（WSL 环境、别名、更多工具链）见 `rules/wsl-cli-tools.md`。

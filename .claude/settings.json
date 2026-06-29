@@ -1,7 +1,6 @@
 {
   "instructions": [
     "CLAUDE.md",
-    ".claude/rules/*.md",
     ".claude/references/*.md"
   ]
 }

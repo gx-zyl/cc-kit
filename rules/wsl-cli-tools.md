@@ -2,23 +2,12 @@
 
 适用于 Debian / WSL2 / AI Coding / Claude Code Agent 环境。
 
+> **行为指令**（`rg`/`fd`/`jq` 替代 `grep`/`find`/`ps` 等）已内联到项目 `CLAUDE.md` §5。
+> 以下为完整工具映射表和环境参考。
+
 ---
 
-## 一、Claude Code 行为指令（优先执行）
-
-WSL 终端下使用现代工具替代传统 Unix 命令：
-
-| 场景 | 使用 | 禁止 |
-|------|------|------|
-| 全文搜索 | `rg` | `grep -R` |
-| 文件查找 | `fd` / `fdfind` | `find .` |
-| AST 代码搜索 | `ast-grep` | `grep + 正则` |
-| JSON 处理 | `jq` | `grep + 正则` |
-| 进程查看 | `procs` | `ps aux` |
-| 系统监控 | `btop` | `top` |
-| 磁盘分析 | `dust` | `du` |
-
-## 二、工具映射总表
+## 工具映射总表
 
 | 用途 | 现代工具 | 包名 | 原始方式 |
 |------|---------|------|---------|
@@ -59,7 +48,7 @@ WSL 终端下使用现代工具替代传统 Unix 命令：
 
 > `*` 补充角色，不能完全替代原始命令。
 
-## 三、WSL/Debian 包名兼容
+## WSL/Debian 包名兼容
 
 ```bash
 # Debian 包名与命令名不一致的别名（放入 ~/.zshrc）
@@ -67,7 +56,7 @@ alias fd='fdfind'      # fd-find → fdfind
 alias bat='batcat'     # bat → batcat
 ```
 
-## 四、常用对照
+## 常用对照
 
 ```bash
 # 搜索: grep → rg
@@ -95,13 +84,10 @@ just build
 mise install node@lts && mise use -g node@lts
 ```
 
-## 五、WSL 环境信息
+## WSL 环境信息
 
 - **OS**: Debian trixie (WSL2)
-- **包管理**: `apt`(优先) → `cargo`(补充) → 官方脚本(最后)
 - **Shell**: zsh + Oh My Zsh + Powerlevel10k
-- **Node.js**: mise 管理（当前 LTS）
-- **Python**: uv 管理
 
 ### WSL 代理配置
 
@@ -113,7 +99,7 @@ GATEWAY=$(cat /etc/resolv.conf | grep nameserver | head -1 | awk '{print $2}')
 # export ALL_PROXY="socks5://${GATEWAY}:9909"
 ```
 
-### 国内镜像（WSL apt/pip/npm 加速）
+### 国内镜像
 
 | 服务 | 镜像 | 用途 |
 |------|------|------|
@@ -135,18 +121,4 @@ zsh (WSL)
  → atuin init（历史搜索）
  → p10k instant prompt（Powerlevel10k）
  → proxy env（默认注释，按需开启）
-```
-
-### Claude Code 提示词注入
-
-```
-运行在 Debian WSL2 / zsh。
-
-工具映射：grep→rg, find→fd(fdfind), ls→eza, cat→bat(batcat),
-top→btop, ps→procs, diff→delta, cd→zoxide, sed→sd, curl→xh,
-ast-grep→结构化搜索, make→just, mise→版本管理, uv→pip,
-history→atuin, jq→JSON, fzf→过滤, delta→diff, glow→MD
-
-优先用 rg / fd / ast-grep / jq / just / mise / uv。
-避免 grep -R / find . / ps aux / top / cat 大文件。
 ```

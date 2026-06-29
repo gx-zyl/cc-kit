@@ -19,7 +19,7 @@
 /w-ocean query "数据库"
 
 # 从某节点出发遍历（深度2层）
-/w-ocean traverse from=rule-coding-standards depth=2
+/w-ocean traverse from=skill-diagnose depth=2
 
 # 图谱健康检查
 /w-ocean-agent health
@@ -40,7 +40,7 @@ w-ocean/
 {type}-{kebab-case-title}
 ```
 
-例：`skill-grill-dream`, `rule-coding-standards`, `memory-user-preference`
+例：`skill-grill-dream`, `skill-diagnose`, `memory-user-preference`
 
 ## 最佳实践
 

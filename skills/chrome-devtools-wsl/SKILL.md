@@ -48,6 +48,15 @@ cdp-bridge.py (3456)                ↑
 PowerShell ───────────────►     Windows Python → CDP
 ```
 
+## 参考文件
+
+插件根目录 `rules/` 包含以下规则文件（均始终加载）：
+
+- `../../rules/wsl-cli-tools.md` — WSL 现代 CLI 工具链映射表
+- `../../rules/wsl-env-audit.md` — WSL 环境健康检查清单
+
+触发本技能时可参考上述文件。
+
 ## 与 web-access 的关系
 
 | web-access 组件 | chrome-devtools-wsl 替代方案 |

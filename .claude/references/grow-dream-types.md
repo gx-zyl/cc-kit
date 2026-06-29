@@ -8,7 +8,7 @@ grow-dream 步骤④（提炼分类）和步骤⑧（追问验收）共享的类
 |------|------|---------|---------|
 | **skill** | 场景化的解题套路 | 有判断分支、需上下文理解、特定场景复用 | `plugin/skills/<name>/SKILL.md` |
 | **command** | 确定性操作序列 | 步骤固定 ≤7 步、重复 ≥2 次、无分支判断 | `plugin/skills/<name>/SKILL.md` |
-| **rule** | 跨项目通用行为约束 | 不引用具体路径/命令、描述通用约束 | `.claude/rules/<name>.md` |
+| **rule** | 跨项目通用行为约束 | 不引用具体路径/命令、描述通用约束 | `rules/<name>.md`（插件根目录） |
 | **agent** | 持续运行的有限角色 | 有独立决策自主权、角色边界明确 | `.claude/agents/<name>.md` |
 | **hook** | 事件驱动的自动化 | 纯后台、≤3s 执行、失败不影响主流程 | `.claude/hook.<event>.sh` |
 | **memory** | 跨会话持久化记忆 | 频次 ≥2、跨会话通用、不重复已有 | `memory/<name>.md` |
