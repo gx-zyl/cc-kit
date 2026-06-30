@@ -1,0 +1,17 @@
+{
+  "$schema": "https://anthropic.com/claude-code/marketplace.schema.json",
+  "name": "cc-kit",
+  "version": "3.0.2",
+  "description": "精选 AI 技能合集：调试、架构、设计、WSL 环境工具等 15 个技能",
+  "author": {
+    "name": "磨砖做镜",
+    "email": "gx-zyl@users.noreply.github.com",
+    "url": "https://github.com/gx-zyl/cc-kit"
+  },
+  "plugins": [
+    {
+      "id": "cc-kit",
+      "path": "./plugins/cc-kit"
+    }
+  ]
+}
