@@ -8,6 +8,10 @@
     "email": "gx-zyl@users.noreply.github.com",
     "url": "https://github.com/gx-zyl/cc-kit"
   },
+  "owner": {
+    "name": "gx-zyl",
+    "url": "https://github.com/gx-zyl"
+  },
   "plugins": [
     {
       "id": "cc-kit",
