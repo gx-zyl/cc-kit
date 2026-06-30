@@ -2,6 +2,11 @@
 
 All notable changes to cc-kit will be documented in this file.
 
+## [3.0.7] - 2026-06-30
+
+### Chore
+- `.gitignore`: 移除 stale `fix1`/`docs` 条目
+
 ## [3.0.6] - 2026-06-30
 
 ### Changed
