@@ -2,6 +2,23 @@
 
 All notable changes to cc-kit will be documented in this file.
 
+## [3.0.9] - 2026-06-30
+
+### Removed
+- **`rules/wsl-env-audit.md`** 和 **`rules/mise-omz-loading-order.md`**：冗余 rule 文件
+
+### Changed
+- `skills/cc-kit/SKILL.md`、`skills/chrome-devtools-wsl/SKILL.md`、`README.md`：同步移除对已删 rule 文件的引用
+
+## [3.0.8] - 2026-06-30
+
+### Changed
+- **规则分发机制切换**：从 `~/.claude/settings.json` `instructions` 改为 `~/.claude/CLAUDE.md` `@` 导入（方案 A）
+  - `tools/rules.sh` / `tools/rules.ps1`：重写为操作 CLAUDE.md 中的 @import 块，使用 HTML 注释 sentinel markers 实现幂等安装/卸载
+  - 不再依赖 `jq`（之前用于操作 JSON）
+- `README.md` 架构章节：全面更新为 @import 方案描述
+- `skills/chrome-devtools-wsl/SKILL.md`：修复旧引用 `tools/install.sh` → `tools/rules.sh`
+
 ## [3.0.7] - 2026-06-30
 
 ### Chore

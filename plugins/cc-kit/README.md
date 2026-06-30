@@ -1,6 +1,6 @@
 # cc-kit
 
-Claude Code 精选技能合集。**v3.0.8**
+Claude Code 精选技能合集。**v3.0.9**
 
 ## 技能清单
 
@@ -123,7 +123,6 @@ Claude Code 支持两种原生规则加载机制：
 ```
 <!-- cc-kit:rules-start -->
 @plugins/marketplaces/cc-kit/plugins/cc-kit/rules/wsl-cli-tools.md
-@plugins/marketplaces/cc-kit/plugins/cc-kit/rules/proxy-management.md
 @plugins/marketplaces/cc-kit/plugins/cc-kit/rules/proxy-management.md
 <!-- cc-kit:rules-end -->
 ```
