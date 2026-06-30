@@ -37,7 +37,6 @@ fi
 # ── Subcommands ─────────────────────────────────────────────────────
 case "${1:-help}" in
     install)
-        echo "Detected: ~/.claude/skills/$PLUGIN_NAME"
         echo "Entry: $INSTR_ENTRY"
 
         # Ensure settings.json exists; backup if present
