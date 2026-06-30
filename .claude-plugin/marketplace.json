@@ -9,7 +9,7 @@
   "plugins": [
     {
       "name": "cc-kit",
-      "version": "3.0.3",
+      "version": "3.0.4",
       "source": "./plugins/cc-kit",
       "description": "精选 AI 技能合集：调试、架构、设计、WSL 环境工具等 15 个技能"
     }

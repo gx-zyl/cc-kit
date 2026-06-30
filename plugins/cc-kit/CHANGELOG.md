@@ -2,6 +2,12 @@
 
 All notable changes to cc-kit will be documented in this file.
 
+## [3.0.4] - 2026-06-30
+
+### Fixed
+- **marketplace.json schema**: 修正 plugin 字段 `id`/`path` → `name`/`source`，匹配 Claude Code marketplace 实际格式
+- 清除 Marketplace 根级残留 `.claude/` 目录
+
 ## [3.0.3] - 2026-06-30
 
 ### Fixed
