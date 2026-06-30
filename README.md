@@ -38,12 +38,13 @@ Claude Code 精选技能合集。**v3.0.2**
 
 ## 安装
 
-### 方式一：项目内使用（开发/测试）
+### 推荐：Marketplace 安装（规则自动管理）
 
 ```bash
-git clone https://github.com/gx-zyl/cc-kit.git
-cd cc-kit && claude --plugin-dir .
+claude plugin marketplace add github:gx-zyl/cc-kit
 ```
+
+Marketplace 源为 **github 类型**，插件安装和更新由 Claude Code 自动管理，`rules/` 规则文件在全局生效。
 
 ### 方式二：全局安装为插件（macOS/Linux/WSL）
 
@@ -58,9 +59,16 @@ ln -s "$(pwd)/cc-kit" ~/.claude/skills/cc-kit
 git clone https://github.com/gx-zyl/cc-kit.git "$env:USERPROFILE\.claude\skills\cc-kit"
 ```
 
-### 安装后注册规则（全局安装必做）
+### 方式四：项目内使用（开发/测试）
 
-全局安装后，执行一步注册，使 `rules/` 目录的规则文件在所有项目中加载：
+```bash
+git clone https://github.com/gx-zyl/cc-kit.git
+cd cc-kit && claude --plugin-dir .
+```
+
+### 手动安装后注册规则（方式二/三必做）
+
+方式二/三为手动克隆安装，需额外执行注册使 `rules/` 目录的规则文件在所有项目中加载：
 
 **WSL / Git Bash：**
 ```bash
@@ -80,7 +88,7 @@ bash ~/.claude/skills/cc-kit/tools/rules.sh uninstall      # WSL
 & "$env:USERPROFILE\.claude\skills\cc-kit\tools\rules.ps1" uninstall  # PowerShell
 ```
 
-> **`--plugin-dir` 开发模式无需注册**：当使用 `claude --plugin-dir .` 从 cc-kit 项目根启动时，项目级的 `.claude/settings.json` 已包含 `./rules/*.md` 条目，规则自动可用。
+> **方式四 `--plugin-dir` 无需注册**：项目级 `.claude/settings.json` 已包含 `./rules/*.md` 条目，规则自动可用。
 
 ## 架构
 
