@@ -90,9 +90,7 @@ bash ~/.claude/skills/cc-kit/tools/rules.sh uninstall      # WSL
 
 > **方式四 `--plugin-dir` 无需注册**：项目级 `.claude/settings.json` 已包含 `./rules/*.md` 条目，规则自动可用。
 
-## 架构
-
-cc-kit 是一个 **Claude Code 插件**，遵循标准插件结构：
+## 架构与规则分发
 
 ### 插件层（自动加载）
 
@@ -105,9 +103,32 @@ cc-kit 是一个 **Claude Code 插件**，遵循标准插件结构：
 
 | 配置 | 路径 | 说明 |
 |------|------|------|
-| 项目设置 | `.claude/settings.json` | 加载 CLAUDE.md + references + rules（仅本地开发） |
-| 规则 | `rules/` | WSL 工具链、代理、mise 等规则（全局安装后需运行 `tools/rules.sh install` 注册到 `~/.claude/settings.json`） |
+| 项目设置 | `.claude/settings.json` | 加载 CLAUDE.md + references + rules（仅 `--plugin-dir` 模式下有效） |
+| 规则 | `rules/` | WSL 工具链、代理、mise 等规则 |
 | 参考 | `.claude/references/` | skill-structure、grow-dream-types |
+
+### 根因：规则无法随插件分发
+
+Claude Code 的 `instructions` 路径解析只扫描**两个位置**：
+
+| 配置文件 | 用途 | 扫描范围 |
+|---|---|---|
+| `~/.claude/settings.json` | 全局配置 | 所有项目 |
+| `<项目根>/.claude/settings.json` | 项目配置 | 仅该项目 |
+
+**插件内的任何 `settings.json` 均不被扫描。** 所以 `rules/` 文件放在插件目录内，但无法作为 `instructions` 自动加载——Claude Code 不读插件目录下的 `settings.json`。
+
+这是设计限制，非插件可更改。解决方案是通过安装脚本将规则路径注册到全局 `~/.claude/settings.json` 中：
+
+```json
+{
+  "instructions": [
+    "plugins/marketplaces/cc-kit/plugins/cc-kit/rules/*.md"
+  ]
+}
+```
+
+路径相对 `~/.claude/` 解析。Marketplace 安装后 `tools/rules.sh install` 自动完成此注册。
 
 ## 推荐终端配置
 

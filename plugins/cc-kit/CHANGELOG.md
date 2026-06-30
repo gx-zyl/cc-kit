@@ -4,6 +4,9 @@ All notable changes to cc-kit will be documented in this file.
 
 ## [3.0.6] - 2026-06-30
 
+### Changed
+- README 架构章节补充根因说明：Claude Code 不扫描插件内 `settings.json`，rules 需通过安装脚本注册到全局配置
+
 ### Fixed
 - **rules.ps1**: 删除 install 子命令中残留的 `$PluginName` 回显（marketplace 路径下未定义）
 
