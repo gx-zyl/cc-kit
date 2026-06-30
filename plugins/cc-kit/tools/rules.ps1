@@ -4,7 +4,8 @@
 
 .DESCRIPTION
     Subcommand dispatch: install → add rules entry; uninstall → remove it.
-    Only supports global install path (~/.claude/skills/cc-kit/).
+    Supports both manual install (~/.claude/skills/cc-kit/) and
+    marketplace install (~/.claude/plugins/...).
     Use --plugin-dir for local dev (project .claude/settings.json has rules).
 
 .EXAMPLE
@@ -19,37 +20,28 @@ param(
 
 $ErrorActionPreference = 'Stop'
 
-$PluginDir    = Split-Path -Parent (Split-Path -Parent $PSCommandPath)
-$ClaudeDir    = Join-Path $HOME '.claude'
-$SettingsFile = Join-Path $ClaudeDir 'settings.json'
+$PluginDir     = Split-Path -Parent (Split-Path -Parent $PSCommandPath)
+$ClaudeDir     = Join-Path $HOME '.claude'
+$SettingsFile  = Join-Path $ClaudeDir 'settings.json'
+$MarketRules   = Join-Path $ClaudeDir 'plugins\marketplaces\cc-kit\plugins\cc-kit\rules'
 
-# ── Path detection (shared, handles symlinks) ───────────────────────
-$PluginName = $null
+# ── Path detection ──────────────────────────────────────────────────
+$InstrEntry = $null
+
 if ($PluginDir.StartsWith("$ClaudeDir\skills\", [StringComparison]::OrdinalIgnoreCase)) {
     $PluginName = Split-Path -Leaf $PluginDir
-} else {
-    # Fallback: check if ~/.claude/skills/<ourName> is a symlink/junction to us
-    $ourName = Split-Path -Leaf $PluginDir
-    $skillsDir = Join-Path $ClaudeDir 'skills'
-    if (Test-Path $skillsDir) {
-        $item = Get-Item (Join-Path $skillsDir $ourName) -ErrorAction SilentlyContinue
-        if ($item -and $item.LinkType -and $item.Target) {
-            $targetFull = [IO.Path]::GetFullPath($item.Target, $item.PSParentPath.ProviderPath)
-            if ((Get-Item $targetFull).FullName -eq (Get-Item $PluginDir).FullName) {
-                $PluginName = $ourName
-            }
-        }
-    }
+    $InstrEntry = "skills/$PluginName/rules/*.md"
+    Write-Host "检测到：手动安装 (~/.claude/skills/$PluginName)"
+} elseif (Test-Path $MarketRules) {
+    $InstrEntry = "plugins/marketplaces/cc-kit/plugins/cc-kit/rules/*.md"
+    Write-Host "检测到：Marketplace 安装"
 }
 
-if (-not $PluginName) {
-    Write-Warning "cc-kit 未安装在 ~/.claude/skills/ 下。"
+if (-not $InstrEntry) {
+    Write-Warning "cc-kit 插件未在 skills/ 或 marketplace cache 中找到。"
     Write-Host "使用 --plugin-dir 模式（项目级 .claude/settings.json 已包含 rules 配置）。"
-    Set-Location -EA SilentlyContinue (Split-Path $PSCommandPath)
     exit 1
 }
-
-$InstrEntry = "skills/$PluginName/rules/*.md"
 
 # ── Subcommands ─────────────────────────────────────────────────────
 switch ($Action) {

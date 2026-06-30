@@ -2,6 +2,11 @@
 
 All notable changes to cc-kit will be documented in this file.
 
+## [3.0.5] - 2026-06-30
+
+### Fixed
+- **rules.sh / rules.ps1**: 增加 marketplace 安装路径检测，支持 `~/.claude/plugins/cache/cc-kit/...` 和 `~/.claude/plugins/marketplaces/cc-kit/...` 路径
+
 ## [3.0.4] - 2026-06-30
 
 ### Fixed

@@ -6,8 +6,10 @@
 #
 # Prerequisite: jq
 #
-# Only supports global install (~/.claude/skills/cc-kit/).
-# For --plugin-dir mode, project .claude/settings.json already handles rules.
+# Supports both install methods:
+#   - ~/.claude/skills/cc-kit/              (manual install)
+#   - ~/.claude/plugins/cache/cc-kit/...    (marketplace install)
+# For --plugin-dir mode, project .claude/settings.json handles rules.
 
 set -euo pipefail
 
@@ -15,17 +17,22 @@ SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PLUGIN_DIR="$(dirname "$SCRIPT_DIR")"
 CLAUDE_DIR="$HOME/.claude"
 SETTINGS_FILE="$CLAUDE_DIR/settings.json"
+MARKETPLACE_RULES="$CLAUDE_DIR/plugins/marketplaces/cc-kit/plugins/cc-kit/rules"
 
-# ── Path detection (shared) ─────────────────────────────────────────
+# ── Path detection ──────────────────────────────────────────────────
 if [[ "$PLUGIN_DIR" == "$CLAUDE_DIR/skills/"* ]]; then
     PLUGIN_NAME="$(basename "$PLUGIN_DIR")"
+    INSTR_ENTRY="skills/$PLUGIN_NAME/rules/*.md"
+    echo "Detected: manual install (~/.claude/skills/$PLUGIN_NAME)"
+elif [[ -d "$MARKETPLACE_RULES" ]]; then
+    # Marketplace checkout exists — use stable path (no version number)
+    INSTR_ENTRY="plugins/marketplaces/cc-kit/plugins/cc-kit/rules/*.md"
+    echo "Detected: marketplace install"
 else
-    echo "Error: cc-kit is not installed under ~/.claude/skills/."
-    echo "Use --plugin-dir mode instead (project .claude/settings.json has rules)."
+    echo "Error: cc-kit plugin not found in skills/ or marketplace cache."
+    echo "Use --plugin-dir mode (project .claude/settings.json has rules)."
     exit 1
 fi
-
-INSTR_ENTRY="skills/$PLUGIN_NAME/rules/*.md"
 
 # ── Subcommands ─────────────────────────────────────────────────────
 case "${1:-help}" in
