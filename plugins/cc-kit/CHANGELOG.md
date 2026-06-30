@@ -2,6 +2,17 @@
 
 All notable changes to cc-kit will be documented in this file.
 
+## [3.0.10] - 2026-06-30
+
+### Fixed
+- **`tools/rules.ps1`**: uninstall 正则表达式缺少 `(?m)` 标志，`^` 锚定到字符串开头而非行首，sentinel 块位于文件末尾时永不匹配 → 卸载静默无操作（`(?s)^\s*` → `(?s)`）
+- **`tools/rules.sh`**: awk uninstall 无 sentinel 平衡性检查——若 MARK_END 丢失或损坏，内容从 MARK_START 到 EOF 被全部删除。添加 `grep -qF "$MARK_END"` 前置守卫
+- **`~/.claude/settings.json`**: 清除旧 `instructions` 分发机制残留条目
+
+### Changed
+- **`tools/rules.sh` / `tools/rules.ps1`**: RULE_FILES 从硬编码改为自动发现（`for f in rules/*.md` / `Get-ChildItem -Name`），新增 rule 文件无需修改代码
+- `--plugin-dir` 降级消息更新为不引用旧 settings.json 机制
+
 ## [3.0.9] - 2026-06-30
 
 ### Removed
