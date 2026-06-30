@@ -1,21 +1,17 @@
 {
-  "$schema": "https://docs.anthropic.com/claude-code/marketplace.schema.json",
   "name": "cc-kit",
-  "version": "3.0.3",
-  "description": "精选 AI 技能合集：调试、架构、设计、WSL 环境工具等 15 个技能",
-  "author": {
-    "name": "磨砖做镜",
-    "email": "gx-zyl@users.noreply.github.com",
-    "url": "https://github.com/gx-zyl/cc-kit"
-  },
   "owner": {
-    "name": "gx-zyl",
-    "url": "https://github.com/gx-zyl"
+    "name": "gx-zyl"
+  },
+  "metadata": {
+    "description": "精选 AI 技能合集：调试、架构、设计、WSL 环境工具等 15 个技能"
   },
   "plugins": [
     {
-      "id": "cc-kit",
-      "path": "./plugins/cc-kit"
+      "name": "cc-kit",
+      "version": "3.0.3",
+      "source": "./plugins/cc-kit",
+      "description": "精选 AI 技能合集：调试、架构、设计、WSL 环境工具等 15 个技能"
     }
   ]
 }
