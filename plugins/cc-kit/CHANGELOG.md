@@ -2,6 +2,15 @@
 
 All notable changes to cc-kit will be documented in this file.
 
+## [3.0.3] - 2026-06-30
+
+### Fixed
+- **`plugins/cc-kit/README.md`**: `--plugin-dir .` → `--plugin-dir plugins/cc-kit`（marketplace 重构后路径偏移）
+- **`$schema` URLs**: `anthropic.com/claude-code/` → `docs.anthropic.com/claude-code/`（原 404）
+
+### Changed
+- marketplace.json & plugin.json 版本同步到 3.0.3
+
 ## [3.0.2] - 2026-06-30
 
 ### Fixed (critical)

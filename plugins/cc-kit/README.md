@@ -1,6 +1,6 @@
 # cc-kit
 
-Claude Code 精选技能合集。**v3.0.2**
+Claude Code 精选技能合集。**v3.0.3**
 
 ## 技能清单
 
@@ -63,7 +63,7 @@ git clone https://github.com/gx-zyl/cc-kit.git "$env:USERPROFILE\.claude\skills\
 
 ```bash
 git clone https://github.com/gx-zyl/cc-kit.git
-cd cc-kit && claude --plugin-dir .
+cd plugins/cc-kit && claude --plugin-dir .
 ```
 
 ### 手动安装后注册规则（方式二/三必做）
