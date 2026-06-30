@@ -33,6 +33,4 @@ cc-kit 是一个 Claude Code 插件合集，提供 15 个精选 AI 技能。
 | 路径 | 文件 | 用途 |
 |------|------|------|
 | `../../rules/` | `wsl-cli-tools.md` | WSL 现代 CLI 工具链映射表 |
-| `../../rules/` | `wsl-env-audit.md` | WSL 环境健康检查清单 |
 | `../../rules/` | `proxy-management.md` | 代理管理与 marketplace 操作指南 |
-| `../../rules/` | `mise-omz-loading-order.md` | mise + Oh My Zsh 加载顺序 |

@@ -1,9 +1,10 @@
 <#
 .SYNOPSIS
-    Register/unregister cc-kit rules in ~/.claude/settings.json
+    Register/unregister cc-kit rules in ~/.claude/CLAUDE.md via @import
 
 .DESCRIPTION
-    Subcommand dispatch: install → add rules entry; uninstall → remove it.
+    Subcommand dispatch: install → append @import lines; uninstall → remove them.
+    Uses HTML-comment sentinel markers for idempotent block management.
     Supports both manual install (~/.claude/skills/cc-kit/) and
     marketplace install (~/.claude/plugins/...).
     Use --plugin-dir for local dev (project .claude/settings.json has rules).
@@ -22,98 +23,106 @@ $ErrorActionPreference = 'Stop'
 
 $PluginDir     = Split-Path -Parent (Split-Path -Parent $PSCommandPath)
 $ClaudeDir     = Join-Path $HOME '.claude'
-$SettingsFile  = Join-Path $ClaudeDir 'settings.json'
+$ClaudeMd      = Join-Path $ClaudeDir 'CLAUDE.md'
 $MarketRules   = Join-Path $ClaudeDir 'plugins\marketplaces\cc-kit\plugins\cc-kit\rules'
 
+# Sentinel markers for idempotent block management
+$MarkStart = '<!-- cc-kit:rules-start -->'
+$MarkEnd   = '<!-- cc-kit:rules-end -->'
+
+# Rule filenames (same for all install methods)
+$RuleFiles = @(
+    'wsl-cli-tools.md',
+    'proxy-management.md'
+)
+
 # ── Path detection ──────────────────────────────────────────────────
-$InstrEntry = $null
+$RulesDir = $null
 
 if ($PluginDir.StartsWith("$ClaudeDir\skills\", [StringComparison]::OrdinalIgnoreCase)) {
     $PluginName = Split-Path -Leaf $PluginDir
-    $InstrEntry = "skills/$PluginName/rules/*.md"
+    $RulesDir = "skills/$PluginName/rules"
     Write-Host "检测到：手动安装 (~/.claude/skills/$PluginName)"
 } elseif (Test-Path $MarketRules) {
-    $InstrEntry = "plugins/marketplaces/cc-kit/plugins/cc-kit/rules/*.md"
+    $RulesDir = "plugins/marketplaces/cc-kit/plugins/cc-kit/rules"
     Write-Host "检测到：Marketplace 安装"
 }
 
-if (-not $InstrEntry) {
+if (-not $RulesDir) {
     Write-Warning "cc-kit 插件未在 skills/ 或 marketplace cache 中找到。"
     Write-Host "使用 --plugin-dir 模式（项目级 .claude/settings.json 已包含 rules 配置）。"
     exit 1
 }
 
+# Build @import lines
+$ImportLines = $RuleFiles | ForEach-Object { "@$RulesDir/$_" }
+
+# ── Helpers ─────────────────────────────────────────────────────────
+function Backup-ClaudeMd {
+    if (Test-Path $ClaudeMd) {
+        $backup = "$ClaudeMd.rules.bak"
+        Copy-Item $ClaudeMd $backup -Force
+        Write-Host "备份：$backup"
+    }
+}
+
+function Block-Exists {
+    if (-not (Test-Path $ClaudeMd)) { return $false }
+    $content = Get-Content $ClaudeMd -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
+    return ($null -ne $content -and $content.Contains($MarkStart))
+}
+
 # ── Subcommands ─────────────────────────────────────────────────────
 switch ($Action) {
     'install' {
-        Write-Host "条目：$InstrEntry"
+        Write-Host "Rules dir: $RulesDir"
 
-        if (Test-Path $SettingsFile) {
-            try {
-                $settings = Get-Content $SettingsFile -Raw -Encoding UTF8 -ErrorAction Stop |
-                    ConvertFrom-Json -ErrorAction Stop
-            } catch {
-                Write-Warning "无法解析 $SettingsFile，将重新创建：$_"
-                $settings = [PSCustomObject]@{}
+        if (Block-Exists) {
+            Write-Host "cc-kit 规则已注册到 $ClaudeMd。"
+            Write-Host "如需更新路径，请先执行 uninstall 再执行 install。"
+            exit 0
+        }
+
+        # Ensure directory exists
+        $null = New-Item -ItemType Directory -Path (Split-Path -Parent $ClaudeMd) -Force -ErrorAction SilentlyContinue
+        Backup-ClaudeMd
+
+        # Ensure trailing newline
+        if (Test-Path $ClaudeMd) {
+            $content = Get-Content $ClaudeMd -Raw -Encoding UTF8 -ErrorAction SilentlyContinue
+            if ($content -and -not $content.EndsWith("`n")) {
+                Add-Content $ClaudeMd -Value "`n" -NoNewline -Encoding UTF8
             }
-            $BackupFile = "$SettingsFile.rules.bak"
-            Copy-Item $SettingsFile $BackupFile -Force
-            Write-Host "备份：$BackupFile"
-        } else {
-            $settings = [PSCustomObject]@{}
         }
 
-        # Normalize to array; @() on $null → @(), on string → @("s")
-        if ($settings.instructions -isnot [array]) {
-            $settings.instructions = @($settings.instructions)
-        }
+        # Append @import block with sentinel markers
+        $block = @(
+            ''
+            $MarkStart
+        ) + $ImportLines + @(
+            $MarkEnd
+        )
 
-        if ($settings.instructions -notcontains $InstrEntry) {
-            $settings.instructions += $InstrEntry
-            $settings | ConvertTo-Json -Depth 10 | Set-Content $SettingsFile -Encoding UTF8
-            Write-Host "✔ 已注册：$InstrEntry"
-        } else {
-            Write-Host "已存在，跳过。"
-        }
+        Add-Content $ClaudeMd -Value ($block -join "`n") -Encoding UTF8
+        Write-Host "✔ 已注册 $($RuleFiles.Count) 个规则文件到 $ClaudeMd"
+        Write-Host "  （通过带 sentinel marker 的 @import 块）"
     }
 
     'uninstall' {
-        Write-Host "条目：$InstrEntry"
-
-        if (-not (Test-Path $SettingsFile)) {
-            Write-Host "未找到 $SettingsFile，无需操作。"
+        if (-not (Block-Exists)) {
+            Write-Host "cc-kit 规则未在 $ClaudeMd 中找到，无需操作。"
             exit 0
         }
 
-        try {
-            $settings = Get-Content $SettingsFile -Raw -Encoding UTF8 -ErrorAction Stop |
-                ConvertFrom-Json -ErrorAction Stop
-        } catch {
-            Write-Warning "无法解析 $SettingsFile，跳过：$_"
-            exit 1
-        }
+        Backup-ClaudeMd
 
-        $BackupFile = "$SettingsFile.rules.bak"
-        Copy-Item $SettingsFile $BackupFile -Force
-        Write-Host "备份：$BackupFile"
+        # Remove block between sentinel markers (inclusive)
+        $content = Get-Content $ClaudeMd -Raw -Encoding UTF8 -ErrorAction Stop
+        $pattern = "(?s)^\s*$([regex]::Escape($MarkStart)).*?$([regex]::Escape($MarkEnd))\s*`n?"
+        $newContent = [regex]::Replace($content, $pattern, '')
+        Set-Content $ClaudeMd -Value $newContent -Encoding UTF8
 
-        # Exit early if no instructions to remove
-        if ($settings.instructions -isnot [array] -or $settings.instructions.Count -eq 0) {
-            Write-Host "instructions 为空，无需操作。"
-            exit 0
-        }
-
-        $original  = @($settings.instructions)
-        $filtered  = $original | Where-Object { $_ -ne $InstrEntry }
-
-        if ($original.Count -eq $filtered.Count) {
-            Write-Host "条目未找到：$InstrEntry"
-            exit 0
-        }
-
-        $settings.instructions = $filtered
-        $settings | ConvertTo-Json -Depth 10 | Set-Content $SettingsFile -Encoding UTF8
-        Write-Host "✔ 已移除：$InstrEntry"
+        Write-Host "✔ 已从 $ClaudeMd 移除 cc-kit 规则 @import 条目"
     }
 
     default {

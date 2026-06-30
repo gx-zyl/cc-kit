@@ -1,6 +1,6 @@
 # cc-kit
 
-Claude Code 精选技能合集。**v3.0.7**
+Claude Code 精选技能合集。**v3.0.8**
 
 ## 技能清单
 
@@ -80,7 +80,7 @@ bash ~/.claude/skills/cc-kit/tools/rules.sh install
 & "$env:USERPROFILE\.claude\skills\cc-kit\tools\rules.ps1" install
 ```
 
-> 注册原理：向 `~/.claude/settings.json` 的 `instructions` 数组追加 `skills/cc-kit/rules/*.md` 条目。路径相对 `~/.claude/` 解析，指向插件内规则文件。
+> 注册原理：向 `~/.claude/CLAUDE.md` 追加 `@` 导入行（每规则文件一条），路径相对 `~/.claude/` 解析，指向插件内规则源文件。使用 HTML 注释 sentinel markers 实现幂等管理。
 
 如需卸载规则注册：
 ```bash
@@ -109,26 +109,30 @@ bash ~/.claude/skills/cc-kit/tools/rules.sh uninstall      # WSL
 
 ### 根因：规则无法随插件分发
 
-Claude Code 的 `instructions` 路径解析只扫描**两个位置**：
+Claude Code **不扫描插件目录下的 `settings.json`**，所以 `rules/` 文件放在插件目录内无法自动加载。
 
-| 配置文件 | 用途 | 扫描范围 |
+Claude Code 支持两种原生规则加载机制：
+
+| 机制 | 适用范围 | 说明 |
 |---|---|---|
-| `~/.claude/settings.json` | 全局配置 | 所有项目 |
-| `<项目根>/.claude/settings.json` | 项目配置 | 仅该项目 |
+| `.claude/rules/` 目录 | 项目级 | 递归发现所有 `.md` 文件 |
+| `CLAUDE.md` 的 `@` 导入 | 全局/项目级 | `@相对路径` 导入外部 `.md` 文件，拼接到 CLAUDE.md 加载 |
 
-**插件内的任何 `settings.json` 均不被扫描。** 所以 `rules/` 文件放在插件目录内，但无法作为 `instructions` 自动加载——Claude Code 不读插件目录下的 `settings.json`。
+插件的规则需要全局（跨项目）生效，因此选择 **CLAUDE.md `@` 导入** 方案——安装脚本向 `~/.claude/CLAUDE.md` 追加 `@` 导入行：
 
-这是设计限制，非插件可更改。解决方案是通过安装脚本将规则路径注册到全局 `~/.claude/settings.json` 中：
-
-```json
-{
-  "instructions": [
-    "plugins/marketplaces/cc-kit/plugins/cc-kit/rules/*.md"
-  ]
-}
+```
+<!-- cc-kit:rules-start -->
+@plugins/marketplaces/cc-kit/plugins/cc-kit/rules/wsl-cli-tools.md
+@plugins/marketplaces/cc-kit/plugins/cc-kit/rules/proxy-management.md
+@plugins/marketplaces/cc-kit/plugins/cc-kit/rules/proxy-management.md
+<!-- cc-kit:rules-end -->
 ```
 
-路径相对 `~/.claude/` 解析。Marketplace 安装后 `tools/rules.sh install` 自动完成此注册。
+路径相对 `~/.claude/` 解析，指向插件源文件。每次会话启动时这些文件内容被拼接到 CLAUDE.md 中一起加载。
+
+- 优点：纯声明式，无文件复制/链接，路径指向插件源文件
+- 风险：cc-kit 升级后若目录结构变更，导入会静默跳过—重新运行 `install` 即可修复
+- 管理：使用 HTML 注释 sentinel markers 实现幂等安装/卸载
 
 ## 推荐终端配置
 

@@ -1,10 +1,8 @@
 #!/bin/bash
-# tools/rules.sh — Register/unregister cc-kit rules in ~/.claude/settings.json
+# tools/rules.sh — Register/unregister cc-kit rules in ~/.claude/CLAUDE.md via @import
 #
 # Usage: bash tools/rules.sh install
 #        bash tools/rules.sh uninstall
-#
-# Prerequisite: jq
 #
 # Supports both install methods:
 #   - ~/.claude/skills/cc-kit/              (manual install)
@@ -16,17 +14,27 @@ set -euo pipefail
 SCRIPT_DIR="$(cd "$(dirname "$0")" && pwd)"
 PLUGIN_DIR="$(dirname "$SCRIPT_DIR")"
 CLAUDE_DIR="$HOME/.claude"
-SETTINGS_FILE="$CLAUDE_DIR/settings.json"
+CLAUDE_MD="$CLAUDE_DIR/CLAUDE.md"
 MARKETPLACE_RULES="$CLAUDE_DIR/plugins/marketplaces/cc-kit/plugins/cc-kit/rules"
 
+# Sentinel markers for idempotent block management
+MARK_START="<!-- cc-kit:rules-start -->"
+MARK_END="<!-- cc-kit:rules-end -->"
+
+# Rule filenames (same for all install methods)
+RULE_FILES=(
+  "wsl-cli-tools.md"
+  "proxy-management.md"
+)
+
 # ── Path detection ──────────────────────────────────────────────────
+RULES_DIR=""
 if [[ "$PLUGIN_DIR" == "$CLAUDE_DIR/skills/"* ]]; then
     PLUGIN_NAME="$(basename "$PLUGIN_DIR")"
-    INSTR_ENTRY="skills/$PLUGIN_NAME/rules/*.md"
+    RULES_DIR="skills/$PLUGIN_NAME/rules"
     echo "Detected: manual install (~/.claude/skills/$PLUGIN_NAME)"
 elif [[ -d "$MARKETPLACE_RULES" ]]; then
-    # Marketplace checkout exists — use stable path (no version number)
-    INSTR_ENTRY="plugins/marketplaces/cc-kit/plugins/cc-kit/rules/*.md"
+    RULES_DIR="plugins/marketplaces/cc-kit/plugins/cc-kit/rules"
     echo "Detected: marketplace install"
 else
     echo "Error: cc-kit plugin not found in skills/ or marketplace cache."
@@ -34,58 +42,72 @@ else
     exit 1
 fi
 
+# Build @import lines
+IMPORT_LINES=()
+for f in "${RULE_FILES[@]}"; do
+    IMPORT_LINES+=("@$RULES_DIR/$f")
+done
+
+# ── Helpers ─────────────────────────────────────────────────────────
+backup_claude_md() {
+    if [[ -f "$CLAUDE_MD" ]]; then
+        cp "$CLAUDE_MD" "$CLAUDE_MD.rules.bak"
+        echo "Backup: $CLAUDE_MD.rules.bak"
+    fi
+}
+
+block_exists() {
+    if [[ ! -f "$CLAUDE_MD" ]]; then return 1; fi
+    grep -qF "$MARK_START" "$CLAUDE_MD" 2>/dev/null
+}
+
 # ── Subcommands ─────────────────────────────────────────────────────
 case "${1:-help}" in
     install)
-        echo "Entry: $INSTR_ENTRY"
+        echo "Rules dir: $RULES_DIR"
 
-        # Ensure settings.json exists; backup if present
-        if [[ ! -f "$SETTINGS_FILE" ]]; then
-            mkdir -p "$(dirname "$SETTINGS_FILE")" 2>/dev/null || true
-            echo '{}' > "$SETTINGS_FILE"
-        else
-            cp "$SETTINGS_FILE" "$SETTINGS_FILE.rules.bak"
-            echo "Backup: $SETTINGS_FILE.rules.bak"
-        fi
-
-        # Append entry (idempotent)
-        if ! jq --arg e "$INSTR_ENTRY" '
-            if has("instructions") then
-                if (.instructions | index($e)) then .
-                else .instructions += [$e] end
-            else .instructions = [$e] end
-        ' "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp"; then
-            rm -f "$SETTINGS_FILE.tmp"
-            echo "Error: jq failed. Is jq installed?"
-            exit 1
-        fi
-        mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
-        echo "✓ Registered: $INSTR_ENTRY"
-        ;;
-
-    uninstall)
-        echo "Entry: $INSTR_ENTRY"
-
-        if [[ ! -f "$SETTINGS_FILE" ]]; then
-            echo "Settings file not found, nothing to do."
+        if block_exists; then
+            echo "cc-kit rules already registered in $CLAUDE_MD."
+            echo "Re-run 'uninstall' then 'install' to update paths."
             exit 0
         fi
 
-        cp "$SETTINGS_FILE" "$SETTINGS_FILE.rules.bak"
-        echo "Backup: $SETTINGS_FILE.rules.bak"
+        mkdir -p "$(dirname "$CLAUDE_MD")" 2>/dev/null || true
+        backup_claude_md
 
-        # Remove entry; leave empty array instead of deleting key
-        if ! jq --arg e "$INSTR_ENTRY" '
-            if has("instructions") then
-                .instructions |= map(select(. != $e))
-            else . end
-        ' "$SETTINGS_FILE" > "$SETTINGS_FILE.tmp"; then
-            rm -f "$SETTINGS_FILE.tmp"
-            echo "Error: jq failed. Is jq installed?"
-            exit 1
+        # Ensure trailing newline
+        if [[ -f "$CLAUDE_MD" ]] && [[ -s "$CLAUDE_MD" ]]; then
+            tail -c1 "$CLAUDE_MD" | read -r _ || echo "" >> "$CLAUDE_MD"
         fi
-        mv "$SETTINGS_FILE.tmp" "$SETTINGS_FILE"
-        echo "✓ Removed: $INSTR_ENTRY"
+
+        # Append @import block with sentinel markers
+        {
+            echo ""
+            echo "$MARK_START"
+            printf '%s\n' "${IMPORT_LINES[@]}"
+            echo "$MARK_END"
+        } >> "$CLAUDE_MD"
+
+        echo "✓ Registered ${#RULE_FILES[@]} rule files in $CLAUDE_MD"
+        echo "  (via @import with sentinel markers)"
+        ;;
+
+    uninstall)
+        if ! block_exists; then
+            echo "cc-kit rules not found in $CLAUDE_MD, nothing to do."
+            exit 0
+        fi
+
+        backup_claude_md
+
+        # Remove block between sentinel markers (inclusive)
+        awk -v start="$MARK_START" -v end="$MARK_END" '
+            index($0, start) { skip=1; next }
+            index($0, end)   { skip=0; next }
+            !skip
+        ' "$CLAUDE_MD" > "$CLAUDE_MD.tmp" && mv "$CLAUDE_MD.tmp" "$CLAUDE_MD"
+
+        echo "✓ Removed cc-kit rules @import entries from $CLAUDE_MD"
         ;;
 
     *)
