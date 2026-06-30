@@ -2,6 +2,11 @@
 
 All notable changes to cc-kit will be documented in this file.
 
+## [3.0.6] - 2026-06-30
+
+### Fixed
+- **rules.ps1**: 删除 install 子命令中残留的 `$PluginName` 回显（marketplace 路径下未定义）
+
 ## [3.0.5] - 2026-06-30
 
 ### Fixed
