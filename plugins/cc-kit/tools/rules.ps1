@@ -30,29 +30,29 @@ $MarketRules   = Join-Path $ClaudeDir 'plugins\marketplaces\cc-kit\plugins\cc-ki
 $MarkStart = '<!-- cc-kit:rules-start -->'
 $MarkEnd   = '<!-- cc-kit:rules-end -->'
 
-# Rule filenames (same for all install methods)
-$RuleFiles = @(
-    'wsl-cli-tools.md',
-    'proxy-management.md'
-)
-
 # ── Path detection ──────────────────────────────────────────────────
 $RulesDir = $null
+$AbsRulesDir = $null
 
 if ($PluginDir.StartsWith("$ClaudeDir\skills\", [StringComparison]::OrdinalIgnoreCase)) {
     $PluginName = Split-Path -Leaf $PluginDir
     $RulesDir = "skills/$PluginName/rules"
+    $AbsRulesDir = Join-Path $PluginDir 'rules'
     Write-Host "检测到：手动安装 (~/.claude/skills/$PluginName)"
 } elseif (Test-Path $MarketRules) {
     $RulesDir = "plugins/marketplaces/cc-kit/plugins/cc-kit/rules"
+    $AbsRulesDir = $MarketRules
     Write-Host "检测到：Marketplace 安装"
 }
 
 if (-not $RulesDir) {
     Write-Warning "cc-kit 插件未在 skills/ 或 marketplace cache 中找到。"
-    Write-Host "使用 --plugin-dir 模式（项目级 .claude/settings.json 已包含 rules 配置）。"
+    Write-Host "使用 --plugin-dir 模式（项目配置会自动加载 rules）。"
     exit 1
 }
+
+# Auto-discover rule files from rules/ directory (alphabetical order)
+$RuleFiles = @(Get-ChildItem "$AbsRulesDir/*.md" -Name)
 
 # Build @import lines
 $ImportLines = $RuleFiles | ForEach-Object { "@$RulesDir/$_" }
@@ -118,7 +118,7 @@ switch ($Action) {
 
         # Remove block between sentinel markers (inclusive)
         $content = Get-Content $ClaudeMd -Raw -Encoding UTF8 -ErrorAction Stop
-        $pattern = "(?s)^\s*$([regex]::Escape($MarkStart)).*?$([regex]::Escape($MarkEnd))\s*`n?"
+        $pattern = "(?s)$([regex]::Escape($MarkStart)).*?$([regex]::Escape($MarkEnd))\s*`n?"
         $newContent = [regex]::Replace($content, $pattern, '')
         Set-Content $ClaudeMd -Value $newContent -Encoding UTF8
 

@@ -21,26 +21,29 @@ MARKETPLACE_RULES="$CLAUDE_DIR/plugins/marketplaces/cc-kit/plugins/cc-kit/rules"
 MARK_START="<!-- cc-kit:rules-start -->"
 MARK_END="<!-- cc-kit:rules-end -->"
 
-# Rule filenames (same for all install methods)
-RULE_FILES=(
-  "wsl-cli-tools.md"
-  "proxy-management.md"
-)
-
 # ── Path detection ──────────────────────────────────────────────────
 RULES_DIR=""
+ABS_RULES_DIR=""
 if [[ "$PLUGIN_DIR" == "$CLAUDE_DIR/skills/"* ]]; then
     PLUGIN_NAME="$(basename "$PLUGIN_DIR")"
     RULES_DIR="skills/$PLUGIN_NAME/rules"
+    ABS_RULES_DIR="$PLUGIN_DIR/rules"
     echo "Detected: manual install (~/.claude/skills/$PLUGIN_NAME)"
 elif [[ -d "$MARKETPLACE_RULES" ]]; then
     RULES_DIR="plugins/marketplaces/cc-kit/plugins/cc-kit/rules"
+    ABS_RULES_DIR="$MARKETPLACE_RULES"
     echo "Detected: marketplace install"
 else
     echo "Error: cc-kit plugin not found in skills/ or marketplace cache."
-    echo "Use --plugin-dir mode (project .claude/settings.json has rules)."
+    echo "Use --plugin-dir mode (project config auto-loads rules)."
     exit 1
 fi
+
+# Auto-discover rule files from rules/ directory (alphabetical order)
+RULE_FILES=()
+for f in "$ABS_RULES_DIR"/*.md; do
+    [[ -f "$f" ]] && RULE_FILES+=("$(basename "$f")")
+done
 
 # Build @import lines
 IMPORT_LINES=()
@@ -99,6 +102,12 @@ case "${1:-help}" in
         fi
 
         backup_claude_md
+
+        # Guard against unbalanced sentinels (prevents data loss)
+        if ! grep -qF "$MARK_END" "$CLAUDE_MD"; then
+            echo "Error: end marker not found (CLAUDE.md may be corrupted). Check backup."
+            exit 1
+        fi
 
         # Remove block between sentinel markers (inclusive)
         awk -v start="$MARK_START" -v end="$MARK_END" '
