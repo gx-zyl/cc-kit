@@ -2,6 +2,11 @@
 
 All notable changes to cc-kit will be documented in this file.
 
+## [3.0.11] - 2026-06-30
+
+### Added
+- **`plugin.json`**: 新增 `displayName`、`keywords`、`repository` 字段，提升 marketplace 可发现性
+
 ## [3.0.10] - 2026-06-30
 
 ### Fixed
