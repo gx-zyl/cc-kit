@@ -1,6 +1,6 @@
 # cc-kit
 
-Claude Code 精选技能合集。**v3.0.1**
+Claude Code 精选技能合集。**v3.0.2**
 
 ## 技能清单
 
@@ -45,21 +45,42 @@ git clone https://github.com/gx-zyl/cc-kit.git
 cd cc-kit && claude --plugin-dir .
 ```
 
-### 方式二：全局安装为插件
+### 方式二：全局安装为插件（macOS/Linux/WSL）
 
 ```bash
 git clone https://github.com/gx-zyl/cc-kit.git
-ln -s "$(pwd)/cc-kit" ~/.claude/skills/cc-kit   # macOS/Linux
-# Windows: 复制或 junction 到 %USERPROFILE%\.claude\skills\cc-kit
+ln -s "$(pwd)/cc-kit" ~/.claude/skills/cc-kit
 ```
-
-安装后，在任何目录运行 `claude` 都会自动加载 cc-kit 的 15 个技能。
 
 ### 方式三：Windows 直接克隆到插件目录
 
 ```pwsh
 git clone https://github.com/gx-zyl/cc-kit.git "$env:USERPROFILE\.claude\skills\cc-kit"
 ```
+
+### 安装后注册规则（全局安装必做）
+
+全局安装后，执行一步注册，使 `rules/` 目录的规则文件在所有项目中加载：
+
+**WSL / Git Bash：**
+```bash
+bash ~/.claude/skills/cc-kit/tools/rules.sh install
+```
+
+**PowerShell：**
+```pwsh
+& "$env:USERPROFILE\.claude\skills\cc-kit\tools\rules.ps1" install
+```
+
+> 注册原理：向 `~/.claude/settings.json` 的 `instructions` 数组追加 `skills/cc-kit/rules/*.md` 条目。路径相对 `~/.claude/` 解析，指向插件内规则文件。
+
+如需卸载规则注册：
+```bash
+bash ~/.claude/skills/cc-kit/tools/rules.sh uninstall      # WSL
+& "$env:USERPROFILE\.claude\skills\cc-kit\tools\rules.ps1" uninstall  # PowerShell
+```
+
+> **`--plugin-dir` 开发模式无需注册**：当使用 `claude --plugin-dir .` 从 cc-kit 项目根启动时，项目级的 `.claude/settings.json` 已包含 `./rules/*.md` 条目，规则自动可用。
 
 ## 架构
 
@@ -76,8 +97,8 @@ cc-kit 是一个 **Claude Code 插件**，遵循标准插件结构：
 
 | 配置 | 路径 | 说明 |
 |------|------|------|
-| 项目设置 | `.claude/settings.json` | 加载指令文件（CLAUDE.md + references） |
-| 规则 | `rules/` | WSL 工具链、代理、mise 等规则（随插件分发，通过 `settings.json` 指令数组加载） |
+| 项目设置 | `.claude/settings.json` | 加载 CLAUDE.md + references + rules（仅本地开发） |
+| 规则 | `rules/` | WSL 工具链、代理、mise 等规则（全局安装后需运行 `tools/rules.sh install` 注册到 `~/.claude/settings.json`） |
 | 参考 | `.claude/references/` | skill-structure、grow-dream-types |
 
 ## 推荐终端配置
