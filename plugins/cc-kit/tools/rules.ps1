@@ -46,7 +46,6 @@ if (-not $InstrEntry) {
 # ── Subcommands ─────────────────────────────────────────────────────
 switch ($Action) {
     'install' {
-        Write-Host "检测到：~/.claude/skills/$PluginName"
         Write-Host "条目：$InstrEntry"
 
         if (Test-Path $SettingsFile) {
